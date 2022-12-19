@@ -1,17 +1,15 @@
 {
-    "configurations": [
-        {
-            "name": "Launch Engine",
-            "request": "launch",
-            "program": "${workspaceFolder}\\out\\Engine.exe",
-            "preLaunchTask": "C/C++: cl.exe build Engine",
-            "args": [],
-            "cwd": "${workspaceFolder}",
-            "stopAtEntry": false,
-            "environment": [],
-            "console": "integratedTerminal",
-            "type": "cppvsdbg",
-        }
-    ],
-    "version": "2.0.0"
+	"configurations": [{
+		"name": "Launch Engine",
+		"request": "launch",
+		"program": "${workspaceFolder}\\out\\bin\\Engine.exe",
+		"preLaunchTask": "C/C++: cl.exe build Engine",
+		"args": [],
+		"cwd": "${workspaceFolder}",
+		"stopAtEntry": false,
+		"environment": [],
+		"console": "integratedTerminal",
+		"type": "cppvsdbg",
+	}],
+	"version": "2.0.0"
 }

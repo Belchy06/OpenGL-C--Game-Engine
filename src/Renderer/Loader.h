@@ -13,13 +13,14 @@ class Loader
 public:
 	Loader();
 
-	RawModel LoadToVAO(Array<float> InPositions);
+	RawModel LoadToVAO(Array<float> InPositions, Array<int> InIndices);
 	void CleanUp();
 
 private:
 	void CreateVAO(GLuint& OutVaoId);
-	void StoreDataInAttributeList(int InAttributeNumber, Array<float> InData, GLuint& OutVboId);
+	void StoreDataInAttributeList(int InAttributeNumber, Array<float> InData);
 	void UnbindVAO();
+	void BindIndicesBuffer(Array<int> InIndices);
 
 	Array<GLuint> VAOs;
 	Array<GLuint> VBOs;

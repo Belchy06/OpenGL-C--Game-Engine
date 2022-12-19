@@ -2,15 +2,15 @@
 
 void Renderer::Prepare()
 {
-	glClearColor(1, 0, 0, 1);
 	glClear(GL_COLOR_BUFFER_BIT);
+	glClearColor(1, 0, 0, 1);
 }
 
 void Renderer::Render(RawModel InModel)
 {
 	glBindVertexArray(InModel.GetVaoId());
 	glEnableVertexAttribArray(0);
-	glDrawArrays(GL_TRIANGLES, 0, InModel.GetVertexCount());
+	glDrawElements(GL_TRIANGLES, InModel.GetVertexCount(), GL_UNSIGNED_INT, 0);
 	glDisableVertexAttribArray(0);
 	glBindVertexArray(0);
 }
