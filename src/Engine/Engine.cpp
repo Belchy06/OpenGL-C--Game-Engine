@@ -25,7 +25,16 @@ int Engine::EngineLoop()
 		3, 1, 2
 	};
 
-	RawModel Model = ModelLoader.LoadToVAO(Vertices, Indices);
+	Array<float> TextureCoords = {
+		0, 0,
+		0, 1,
+		1, 1,
+		1, 0
+	};
+
+	RawModel Model = ModelLoader.LoadToVAO(Vertices, TextureCoords, Indices);
+	ModelTexture Texture = ModelTexture(ModelLoader.LoadTexture("./res/image.png"));
+	TexturedModel TextureModel = TexturedModel(Model, Texture);
 
 	while (glfwGetKey(Window, GLFW_KEY_ESCAPE) != GLFW_PRESS && glfwWindowShouldClose(Window) == 0)
 	{
@@ -33,7 +42,7 @@ int Engine::EngineLoop()
 
 		ModelRenderer.Prepare();
 		Shader.Start();
-		ModelRenderer.Render(Model);
+		ModelRenderer.Render(TextureModel);
 		Shader.Stop();
 		// Swap buffers
 		glfwSwapBuffers(Window);

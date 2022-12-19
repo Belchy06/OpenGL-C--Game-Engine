@@ -4,16 +4,25 @@ Loader::Loader()
 {
 	VAOs = Array<GLuint>();
 	VBOs = Array<GLuint>();
+	Textures = Array<GLuint>();
 }
 
-RawModel Loader::LoadToVAO(Array<float> InPositions, Array<int> InIndices)
+RawModel Loader::LoadToVAO(Array<float> InPositions, Array<float> InTextureCoords, Array<int> InIndices)
 {
 	GLuint VaoID;
 	CreateVAO(VaoID);
 	BindIndicesBuffer(InIndices);
-	StoreDataInAttributeList(0, InPositions);
+	StoreDataInAttributeList(0, 3, InPositions);
+	StoreDataInAttributeList(1, 2, InTextureCoords);
 	UnbindVAO();
 	return RawModel(VaoID, InIndices.Length());
+}
+
+GLuint Loader::LoadTexture(const char* InTexturePath)
+{
+	GLuint TextureID = SOIL_load_OGL_texture(InTexturePath, SOIL_LOAD_RGBA, SOIL_CREATE_NEW_ID, SOIL_FLAG_INVERT_Y);
+	Textures.Add(TextureID);
+	return TextureID;
 }
 
 void Loader::CreateVAO(GLuint& OutVaoId)
@@ -23,13 +32,13 @@ void Loader::CreateVAO(GLuint& OutVaoId)
 	VAOs.Add(OutVaoId);
 }
 
-void Loader::StoreDataInAttributeList(int InAttributeNumber, Array<float> InData)
+void Loader::StoreDataInAttributeList(int InAttributeNumber, int InCoordinateSize, Array<float> InData)
 {
 	GLuint VboId;
 	glGenBuffers(1, &VboId);
 	glBindBuffer(GL_ARRAY_BUFFER, VboId);
 	glBufferData(GL_ARRAY_BUFFER, InData.Length() * sizeof(GLfloat), InData.GetData(), GL_STATIC_DRAW);
-	glVertexAttribPointer(InAttributeNumber, 3, GL_FLOAT, false, 0, 0);
+	glVertexAttribPointer(InAttributeNumber, InCoordinateSize, GL_FLOAT, false, 0, 0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	VBOs.Add(VboId);
 }
@@ -56,5 +65,9 @@ void Loader::CleanUp()
 
 	VBOs.ForEach([](GLuint VboId) {
 		glDeleteBuffers(1, &VboId);
+	});
+
+	Textures.ForEach([](GLuint TextureId) {
+		glDeleteTextures(1, &TextureId);
 	});
 }

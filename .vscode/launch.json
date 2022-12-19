@@ -8,7 +8,7 @@
 		"cwd": "${workspaceFolder}",
 		"stopAtEntry": false,
 		"environment": [],
-		"console": "internalConsole",
+		"console": "externalTerminal",
 		"type": "cppvsdbg",
 	}],
 	"version": "2.0.0"

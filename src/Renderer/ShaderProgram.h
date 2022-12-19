@@ -1,4 +1,4 @@
-
+#pragma once
 #include <string>
 #include <vector>
 #include <sstream>
@@ -18,14 +18,14 @@ public:
 	void Stop();
 	void CleanUp();
 
+protected:
+	virtual void BindAttributes() = 0;
+	void BindAttribute(GLuint InAttribute, const char* InVariableName);
+
 private:
 	GLuint LoadShader(const char* InShaderPath, int InShaderType);
 
 	GLuint ProgramID;
 	GLuint VertexShaderID;
 	GLuint FragmentShaderID;
-
-protected:
-	virtual void BindAttributes() = 0;
-	void BindAttribute(GLuint InAttribute, const char* InVariableName);
 };

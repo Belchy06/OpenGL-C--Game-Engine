@@ -11,4 +11,5 @@ StaticShader::StaticShader()
 void StaticShader::BindAttributes()
 {
 	BindAttribute(0, "position");
+	BindAttribute(1, "textureCoords");
 }

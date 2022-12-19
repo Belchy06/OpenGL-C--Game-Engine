@@ -2,10 +2,12 @@
 
 #include <Windows.h>
 #include <tchar.h>
+#include "../Textures/ModelTexture.h"
+#include "../Models/RawModel.h"
+#include "../Models/TexturedModel.h"
 #include "../Renderer/DisplayManager.h"
 #include "../Renderer/Loader.h"
 #include "../Renderer/Renderer.h"
-#include "../Renderer/RawModel.h"
 #include "../Renderer/StaticShader.h"
 
 #define GLEW_STATIC
