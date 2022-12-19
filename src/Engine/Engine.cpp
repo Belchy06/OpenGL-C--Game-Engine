@@ -2,9 +2,16 @@
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
 {
+	Engine GameEngine = Engine();
+	return GameEngine.EngineLoop();
+}
+
+int Engine::EngineLoop()
+{
 	GLFWwindow* Window = DisplayManager::CreateDisplay();
 	Loader ModelLoader = Loader();
 	Renderer ModelRenderer = Renderer();
+	StaticShader Shader = StaticShader();
 
 	Array<float> Vertices = {
 		-0.5f, 0.5f, 0.f,
@@ -25,12 +32,15 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		ModelRenderer.Prepare();
+		Shader.Start();
 		ModelRenderer.Render(Model);
+		Shader.Stop();
 		// Swap buffers
 		glfwSwapBuffers(Window);
 		glfwPollEvents();
 	}
 
+	Shader.CleanUp();
 	ModelLoader.CleanUp();
 	return 0;
 }
