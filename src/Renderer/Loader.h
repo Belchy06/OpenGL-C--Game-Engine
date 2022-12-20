@@ -1,15 +1,12 @@
 #pragma once
 
-#include "../Models/RawModel.h"
-#include "../Utility/Array.h"
-#include "../Utility/String.h"
 #include <iostream>
 
-#include "../ThirdParty/soil/include/SOIL2.h"
+#include "../Math/Array.h"
+#include "../Models/RawModel.h"
 
-#define GLEW_STATIC
+#include "../ThirdParty/soil/include/SOIL2.h"
 #include "../ThirdParty/glew-2.1.0/include/GL/glew.h"
-#undef GLEW_STATIC
 #include "../ThirdParty/glfw-3.3.8/include/GLFW/glfw3.h"
 
 class Loader

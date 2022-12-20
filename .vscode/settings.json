@@ -1,5 +1,5 @@
 {
-    "files.associations": {
+	"files.associations": {
 		"initializer_list": "cpp",
 		"vector": "cpp",
 		"xmemory": "cpp",
@@ -45,6 +45,7 @@
 		"xlocnum": "cpp",
 		"xstddef": "cpp",
 		"xtr1common": "cpp",
-		"xutility": "cpp"
+		"xutility": "cpp",
+		"algorithm": "cpp"
 	}
 }
