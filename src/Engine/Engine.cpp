@@ -23,11 +23,12 @@ Engine::Engine()
 
 	glfwSetKeyCallback(Window, keyCallback);
 	ModelLoader = new Loader();
-	Shader = new StaticShader();
-	ModelRenderer = new Renderer(*Shader);
+	SceneRenderer = new MasterRenderer();
 	Cam = new Camera();
 
 	EnginePtr = this;
+
+	srand(time(NULL));
 }
 
 Engine::~Engine()
@@ -37,27 +38,38 @@ Engine::~Engine()
 
 int Engine::EngineLoop()
 {
-	RawModel Model = OBJLoader::LoadObjModel("./res/dragon.obj", *ModelLoader);
-	ModelTexture Texture(ModelLoader->LoadTexture("./res/white.png"));
-	TexturedModel TextureModel(Model, Texture);
+	RawModel Model = OBJLoader::LoadObjModel("./res/cube.obj", *ModelLoader);
+	// Texture.SetShineDamper(10.f);
+	// Texture.SetReflectivity(1.f);
+	TexturedModel TextureModel(Model, ModelTexture(ModelLoader->LoadTexture("./res/image.png")));
 
-	Entity Ent(TextureModel, Vector3<float>(0, 0, -25.f), Rotator<float>(0.f), Vector3<float>(1.f));
-	Light Lit(Vector3<float>(0, 0, -20.f), Vector3<float>(1.f));
+	Light Sun(Vector3<float>(3000, 2000, 3000), Vector3<float>(1.f));
+
+	Array<Entity> Cubes;
+
+	for (int i = 0; i < 200; i++)
+	{
+		float X = (float)(rand() / 32767.f) * 100.f - 50.f;
+		float Y = (float)(rand() / 32767.f) * 100.f - 50.f;
+		float Z = (float)(rand() / 32767.f) * -300.f;
+		Cubes.Add(Entity(TextureModel, Vector3<float>(X, Y, Z), Rotator<float>(rand(), rand(), rand()), Vector3<float>::OneVector()));
+	}
+
 	while (glfwGetKey(Window, GLFW_KEY_ESCAPE) != GLFW_PRESS && glfwWindowShouldClose(Window) == 0)
 	{
 		glClear(GL_COLOR_BUFFER_BIT);
-		Ent.IncreaseRotation(Vector3<float>(0.f, .01f, 0.f));
-		ModelRenderer->Prepare();
-		Shader->Start();
-		Shader->LoadLight(Lit);
-		ModelRenderer->Render(Ent, *Cam);
-		Shader->Stop();
+
+		Cubes.ForEach([this](Entity Cube) {
+			SceneRenderer->ProcessEntity(Cube);
+		});
+
+		SceneRenderer->Render(Sun, *Cam);
 		// Swap buffers
 		glfwSwapBuffers(Window);
 		glfwPollEvents();
 	}
 
-	Shader->CleanUp();
+	SceneRenderer->CleanUp();
 	ModelLoader->CleanUp();
 	return 0;
 }

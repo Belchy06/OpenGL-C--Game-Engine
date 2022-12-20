@@ -26,6 +26,7 @@
 				"${workspaceFolder}\\src\\Shaders\\StaticShader.cpp",
 				"${workspaceFolder}\\src\\Renderer\\Loader.cpp",
 				"${workspaceFolder}\\src\\Renderer\\Renderer.cpp",
+				"${workspaceFolder}\\src\\Renderer\\MasterRenderer.cpp",
 				"${workspaceFolder}\\src\\Renderer\\DisplayManager.cpp",
 				"${workspaceFolder}\\src\\Renderer\\OBJLoader.cpp",
 				"${workspaceFolder}\\src\\Engine\\Engine.cpp",

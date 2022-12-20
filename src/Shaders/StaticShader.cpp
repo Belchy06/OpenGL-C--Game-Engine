@@ -37,6 +37,12 @@ void StaticShader::LoadLight(Light InLight)
 	LoadVector(UniformLocations["lightColour"], InLight.GetColour());
 }
 
+void StaticShader::LoadShineVariables(float Damper, float Reflectivity)
+{
+	LoadFloat(UniformLocations["shineDamper"], Damper);
+	LoadFloat(UniformLocations["reflectivity"], Reflectivity);
+}
+
 void StaticShader::GetAllUniformLocations()
 {
 	UniformLocations["transformationMatrix"] = GetUniformLocation("transformationMatrix");
@@ -44,4 +50,6 @@ void StaticShader::GetAllUniformLocations()
 	UniformLocations["viewMatrix"] = GetUniformLocation("viewMatrix");
 	UniformLocations["lightPosition"] = GetUniformLocation("lightPosition");
 	UniformLocations["lightColour"] = GetUniformLocation("lightColour");
+	UniformLocations["shineDamper"] = GetUniformLocation("shineDamper");
+	UniformLocations["reflectivity"] = GetUniformLocation("reflectivity");
 }

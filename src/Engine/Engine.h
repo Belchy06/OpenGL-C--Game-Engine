@@ -1,8 +1,10 @@
 #pragma once
 
+#include <time.h>
 #include <windows.h>
 #include <tchar.h>
 #include <iostream>
+#include <cstdlib>
 
 #include "../Textures/ModelTexture.h"
 #include "../Entities/Entity.h"
@@ -12,7 +14,7 @@
 #include "../Shaders/StaticShader.h"
 #include "../Renderer/DisplayManager.h"
 #include "../Renderer/Loader.h"
-#include "../Renderer/Renderer.h"
+#include "../Renderer/MasterRenderer.h"
 #include "../Renderer/OBJLoader.h"
 
 #include "../ThirdParty/glew-2.1.0/include/GL/glew.h"
@@ -32,8 +34,7 @@ public:
 private:
 	GLFWwindow* Window;
 	Loader* ModelLoader;
-	StaticShader* Shader;
-	Renderer* ModelRenderer;
+	MasterRenderer* SceneRenderer;
 	Camera* Cam;
 
 	static Engine* EnginePtr;

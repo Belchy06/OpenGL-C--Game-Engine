@@ -5,13 +5,3 @@ TexturedModel::TexturedModel(RawModel InModel, ModelTexture InTexture)
 	, Texture(InTexture)
 {
 }
-
-RawModel TexturedModel::GetRawModel()
-{
-	return Model;
-}
-
-ModelTexture TexturedModel::GetModelTexture()
-{
-	return Texture;
-}

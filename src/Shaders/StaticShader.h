@@ -17,6 +17,7 @@ public:
 	void LoadProjectionMatrix(Matrix4<float> InMatrix);
 	void LoadViewMatrix(Matrix4<float> InMatrix);
 	void LoadLight(Light InLight);
+	void LoadShineVariables(float Damper, float Reflectivity);
 
 protected:
 	virtual void BindAttributes() override;

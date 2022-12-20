@@ -5,7 +5,7 @@ ModelTexture::ModelTexture(GLuint InTextureID)
 {
 }
 
-GLuint ModelTexture::GetTextureID()
+GLuint ModelTexture::GetTextureID() const
 {
 	return TextureID;
 }

@@ -3,6 +3,8 @@
 Renderer::Renderer(StaticShader InShader)
 	: Shader(InShader)
 {
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);
 	CreateProjectionMatrix();
 	Shader.Start();
 	Shader.LoadProjectionMatrix(ProjectionMatrix);
@@ -16,30 +18,50 @@ void Renderer::Prepare()
 	glClearColor(1, 0, 0, 1);
 }
 
-void Renderer::Render(Entity InEntity, Camera InCamera)
+void Renderer::Render(std::map<TexturedModel, Array<Entity>> InEntities)
 {
-	TexturedModel Model = InEntity.GetModel();
-	RawModel RawModel = Model.GetRawModel();
+	for (std::map<TexturedModel, Array<Entity>>::iterator Iter = InEntities.begin(); Iter != InEntities.end(); ++Iter)
+	{
+		TexturedModel Model = Iter->first;
+
+		PrepareTexturedModel(Model);
+		Array<Entity> Batch = Iter->second;
+		Batch.ForEach([this, &Model](Entity InEntity) {
+			PrepareInstance(InEntity);
+			glDrawElements(GL_TRIANGLES, Model.GetRawModel().GetVertexCount(), GL_UNSIGNED_INT, 0);
+		});
+
+		UnbindTexturedModel();
+	}
+}
+
+void Renderer::PrepareTexturedModel(TexturedModel InModel)
+{
+	RawModel RawModel = InModel.GetRawModel();
 
 	glBindVertexArray(RawModel.GetVaoId());
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
 	glEnableVertexAttribArray(2);
-	Shader.LoadTransformationMatrix(Transform<float>(InEntity.GetPosition(), InEntity.GetScale(), InEntity.GetRotation()).ToMatrix());
 
-	Vector3<float> CameraPosition = InCamera.GetPosition() * -1;
-	Vector3<float> CameraScale = Vector3<float>::OneVector();
-	Rotator<float> CameraRotation = InCamera.GetRotation();
-	Transform<float> ViewTransform(CameraPosition, CameraScale, CameraRotation);
-
-	Shader.LoadViewMatrix(ViewTransform.ToMatrix());
+	ModelTexture Texture = InModel.GetModelTexture();
+	Shader.LoadShineVariables(Texture.GetShineDamper(), Texture.GetReflectivity());
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, Model.GetModelTexture().GetTextureID());
-	glDrawElements(GL_TRIANGLES, RawModel.GetVertexCount(), GL_UNSIGNED_INT, 0);
+	glBindTexture(GL_TEXTURE_2D, Texture.GetTextureID());
+}
+
+void Renderer::UnbindTexturedModel()
+{
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
 	glDisableVertexAttribArray(2);
 	glBindVertexArray(0);
+}
+
+void Renderer::PrepareInstance(Entity InEntity)
+{
+	Transform<float> EntityTransformation(InEntity.GetPosition(), InEntity.GetScale(), InEntity.GetRotation());
+	Shader.LoadTransformationMatrix(EntityTransformation.ToMatrix());
 }
 
 void Renderer::CreateProjectionMatrix()

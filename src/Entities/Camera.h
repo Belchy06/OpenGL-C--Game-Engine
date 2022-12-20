@@ -2,6 +2,8 @@
 
 #include "../Math/Vector.h"
 #include "../Math/Rotator.h"
+#include "../Math/Matrix.h"
+#include "../Math/Transform.h"
 
 #include "../ThirdParty/glfw-3.3.8/include/GLFW/glfw3.h"
 
@@ -18,6 +20,8 @@ public:
 	Rotator<float> GetRotation() { return Rotation; }
 	void SetRotation(Rotator<float> InRotation) { Rotation = InRotation; }
 	void IncreaseRotation(Rotator<float> InDelta) { Rotation += InDelta; }
+
+	Matrix4<float> GetTransformationMatrix();
 
 private:
 	Vector3<float> Position;
