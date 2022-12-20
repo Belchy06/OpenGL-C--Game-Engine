@@ -5,7 +5,22 @@ Engine* Engine::EnginePtr = nullptr;
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
 {
 	Engine GameEngine = Engine();
-	return GameEngine.EngineLoop();
+
+	std::wstringstream SS;
+	SS << pCmdLine;
+	std::wstring WCmdLine = SS.str();
+	OutputDebugString(L"Command Line:");
+	OutputDebugString(WCmdLine.c_str());
+
+	OutputDebugString(L"\n");
+// clang-format off
+	#pragma warning( suppress: 4244 )
+	std::string CmdLine(WCmdLine.begin(), WCmdLine.end());
+	// clang-format on
+
+	GameEngine.Init(CmdLine);
+
+	return GameEngine.Loop();
 }
 
 Engine::Engine()
@@ -36,12 +51,66 @@ Engine::~Engine()
 	EnginePtr = nullptr;
 }
 
-int Engine::EngineLoop()
+int Engine::Init(std::string CommandLine)
 {
-	RawModel Model = OBJLoader::LoadObjModel("./res/cube.obj", *ModelLoader);
+	using namespace std;
+
+	/* Initialize default values */
+	Options["CameraSpeed"] = DEFAULT_CAMERA_SPEED;
+
+	if (CommandLine.size())
+	{
+		vector<string> CommandLineArgs = String::Split(CommandLine, " ");
+		map<string, string> MappedArgs;
+		for (string Arg : CommandLineArgs)
+		{
+			vector<string> KeyValue = String::Split(Arg, "=");
+			if (KeyValue.size() == 2)
+			{
+				MappedArgs[KeyValue[0]] = KeyValue[1];
+			}
+		}
+
+		if (MappedArgs.find("EngineIniPath") != MappedArgs.end())
+		{
+			ParseConfig(MappedArgs["EngineIniPath"]);
+		}
+		else
+		{
+			ParseConfig(DEFAULT_ENGINE_INI);
+		}
+	}
+
+	return 0;
+}
+
+void Engine::ParseConfig(std::string InConfigPath)
+{
+	std::ifstream File;
+	File.open(InConfigPath);
+
+	if (File.is_open())
+	{
+		std::string Line;
+		while (std::getline(File, Line))
+		{
+			std::vector<std::string> KeyValue = String::Split(Line, "=");
+			if (KeyValue.size() == 2)
+			{
+				Options[KeyValue[0]] = std::stof(KeyValue[1]);
+			}
+		}
+	}
+
+	File.close();
+}
+
+int Engine::Loop()
+{
+	RawModel Model = OBJLoader::LoadObjModel("./res/dragon.obj", *ModelLoader);
 	// Texture.SetShineDamper(10.f);
 	// Texture.SetReflectivity(1.f);
-	TexturedModel TextureModel(Model, ModelTexture(ModelLoader->LoadTexture("./res/image.png")));
+	TexturedModel TextureModel(Model, ModelTexture(ModelLoader->LoadTexture("./res/white.png")));
 
 	Light Sun(Vector3<float>(3000, 2000, 3000), Vector3<float>(1.f));
 
@@ -79,22 +148,22 @@ void Engine::HandleKey(GLFWwindow* Window, int Key, int Scancode, int Action, in
 	switch (Key)
 	{
 		case GLFW_KEY_W:
-			Cam->IncreasePosition(Vector3<float>(0.f, 0.f, 0.02f));
+			Cam->IncreasePosition(Vector3<float>(0.f, 0.f, -Options["CameraSpeed"]));
 			break;
 		case GLFW_KEY_S:
-			Cam->IncreasePosition(Vector3<float>(0.f, 0.f, -0.02f));
+			Cam->IncreasePosition(Vector3<float>(0.f, 0.f, Options["CameraSpeed"]));
 			break;
 		case GLFW_KEY_A:
-			Cam->IncreasePosition(Vector3<float>(0.02f, 0.f, 0.f));
+			Cam->IncreasePosition(Vector3<float>(-Options["CameraSpeed"], 0.f, 0.f));
 			break;
 		case GLFW_KEY_D:
-			Cam->IncreasePosition(Vector3<float>(-0.02f, 0.f, 0.f));
+			Cam->IncreasePosition(Vector3<float>(Options["CameraSpeed"], 0.f, 0.f));
 			break;
 		case GLFW_KEY_LEFT_CONTROL:
-			Cam->IncreasePosition(Vector3<float>(0.f, -0.02f, 0.f));
+			Cam->IncreasePosition(Vector3<float>(0.f, -Options["CameraSpeed"], 0.f));
 			break;
 		case GLFW_KEY_SPACE:
-			Cam->IncreasePosition(Vector3<float>(0.f, 0.02f, 0.f));
+			Cam->IncreasePosition(Vector3<float>(0.f, Options["CameraSpeed"], 0.f));
 			break;
 	}
 }

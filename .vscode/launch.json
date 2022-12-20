@@ -5,7 +5,9 @@
 			"request": "launch",
 			"program": "${workspaceFolder}\\out\\bin\\Engine.exe",
 			"preLaunchTask": "C/C++: cl.exe build Engine",
-			"args": [],
+			"args": [
+				"EngineIniPath=./config/Engine.ini"
+			],
 			"cwd": "${workspaceFolder}",
 			"stopAtEntry": false,
 			"environment": [],
