@@ -105,16 +105,16 @@ int Engine::EngineLoop()
 
 	};
 
-	RawModel Model = ModelLoader->LoadToVAO(Vertices, TextureCoords, Indices);
-	ModelTexture Texture(ModelLoader->LoadTexture("./res/image.png"));
+	RawModel Model = OBJLoader::LoadObjModel("./res/stall.obj", *ModelLoader);
+	ModelTexture Texture(ModelLoader->LoadTexture("./res/stall.png"));
 	TexturedModel TextureModel(Model, Texture);
 
-	Entity Ent(TextureModel, Vector3<float>(0, 0, -5.f), Rotator<float>(0.f), Vector3<float>(1.f));
+	Entity Ent(TextureModel, Vector3<float>(0, 0, -25.f), Rotator<float>(0.f), Vector3<float>(1.f));
 
 	while (glfwGetKey(Window, GLFW_KEY_ESCAPE) != GLFW_PRESS && glfwWindowShouldClose(Window) == 0)
 	{
 		glClear(GL_COLOR_BUFFER_BIT);
-		Ent.IncreaseRotation(Vector3<float>(.01f, .01f, 0.f));
+		Ent.IncreaseRotation(Vector3<float>(0.f, .01f, 0.f));
 		ModelRenderer->Prepare();
 		Shader->Start();
 		ModelRenderer->Render(Ent, *Cam);
@@ -136,14 +136,20 @@ void Engine::HandleKey(GLFWwindow* Window, int Key, int Scancode, int Action, in
 		case GLFW_KEY_W:
 			Cam->IncreasePosition(Vector3<float>(0.f, 0.f, 0.02f));
 			break;
-		case GLFW_KEY_A:
-			Cam->IncreasePosition(Vector3<float>(0.02f, 0.f, 0.f));
-			break;
 		case GLFW_KEY_S:
 			Cam->IncreasePosition(Vector3<float>(0.f, 0.f, -0.02f));
 			break;
+		case GLFW_KEY_A:
+			Cam->IncreasePosition(Vector3<float>(0.02f, 0.f, 0.f));
+			break;
 		case GLFW_KEY_D:
 			Cam->IncreasePosition(Vector3<float>(-0.02f, 0.f, 0.f));
+			break;
+		case GLFW_KEY_LEFT_CONTROL:
+			Cam->IncreasePosition(Vector3<float>(0.f, -0.02f, 0.f));
+			break;
+		case GLFW_KEY_SPACE:
+			Cam->IncreasePosition(Vector3<float>(0.f, 0.02f, 0.f));
 			break;
 	}
 }

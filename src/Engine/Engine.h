@@ -11,6 +11,7 @@
 #include "../Renderer/DisplayManager.h"
 #include "../Renderer/Loader.h"
 #include "../Renderer/Renderer.h"
+#include "../Renderer/OBJLoader.h"
 
 #include "../ThirdParty/glew-2.1.0/include/GL/glew.h"
 #include "../ThirdParty/glfw-3.3.8/include/GLFW/glfw3.h"

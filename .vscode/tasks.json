@@ -26,6 +26,7 @@
 				"${workspaceFolder}\\src\\Renderer\\Loader.cpp",
 				"${workspaceFolder}\\src\\Renderer\\Renderer.cpp",
 				"${workspaceFolder}\\src\\Renderer\\DisplayManager.cpp",
+				"${workspaceFolder}\\src\\Renderer\\OBJLoader.cpp",
 				"${workspaceFolder}\\src\\Engine\\Engine.cpp",
 				"user32.lib",
 				"gdi32.lib",

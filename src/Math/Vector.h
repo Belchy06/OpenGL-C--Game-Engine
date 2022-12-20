@@ -2,6 +2,74 @@
 
 #include <initializer_list>
 #include "Array.h"
+template <typename T>
+class Vector2
+{
+public:
+	static Vector2<T> ZeroVector() { return Vector2<T>(0.f, 0.f); }
+	static Vector2<T> OneVector() { return Vector2<T>(1.f, 1.f); }
+
+	Vector2()
+		: X(0), Y(0) {}
+
+	Vector2(T InValue)
+		: X(InValue), Y(InValue) {}
+
+	Vector2(T InX, T InY)
+		: X(InX), Y(InY) {}
+
+	Vector2(Array<T> InData)
+		: X(InData[0]), Y(InData[1]) {}
+
+	Vector2(std::initializer_list<T> List)
+	{
+		if (List.size() == 2)
+		{
+			int idx = 0;
+			for (const T Item : List)
+			{
+				switch (idx)
+				{
+					case 0:
+						X = Item;
+						break;
+					case 1:
+						Y = Item;
+						break;
+				}
+				idx++;
+			}
+		}
+	}
+
+	Vector2<T> operator-(const Vector2<T>& Other)
+	{
+		return Vector2<T>(X - Other.X, Y - Other.Y, Z - Other.Z);
+	}
+
+	Vector2<T> operator-=(const Vector2<T>& Other)
+	{
+		*this = *this - Other;
+	}
+
+	Vector2<T> operator+(const Vector2<T>& Other)
+	{
+		return Vector2<T>(X + Other.X, Y + Other.Y);
+	}
+
+	Vector2<T> operator*(const float Scalar) const
+	{
+		return Vector2<T>(X * Scalar, Y * Scalar);
+	}
+
+	void operator+=(const Vector2<T>& Other)
+	{
+		*this = *this + Other;
+	}
+
+	T X;
+	T Y;
+};
 
 template <typename T>
 class Vector3

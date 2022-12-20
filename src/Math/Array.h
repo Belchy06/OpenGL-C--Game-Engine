@@ -58,9 +58,19 @@ public:
 		}
 	}
 
-	T operator[](size_t InLocation)
+	T& operator[](size_t InLocation)
 	{
-		return Data.at(InLocation);
+		return Data[InLocation];
+	}
+
+	void Reserve(size_t InNumElements)
+	{
+		Data.reserve(InNumElements);
+	}
+
+	void Assign(size_t InNumElements, const T& InValue)
+	{
+		Data.assign(InNumElements, InValue);
 	}
 
 private:
