@@ -13,6 +13,7 @@ void StaticShader::BindAttributes()
 {
 	BindAttribute(0, "position");
 	BindAttribute(1, "textureCoords");
+	BindAttribute(2, "normal");
 }
 
 void StaticShader::LoadTransformationMatrix(Matrix4<float> InMatrix)
@@ -30,9 +31,17 @@ void StaticShader::LoadViewMatrix(Matrix4<float> InMatrix)
 	LoadMatrix(UniformLocations["viewMatrix"], InMatrix);
 }
 
+void StaticShader::LoadLight(Light InLight)
+{
+	LoadVector(UniformLocations["lightPosition"], InLight.GetPosition());
+	LoadVector(UniformLocations["lightColour"], InLight.GetColour());
+}
+
 void StaticShader::GetAllUniformLocations()
 {
 	UniformLocations["transformationMatrix"] = GetUniformLocation("transformationMatrix");
 	UniformLocations["projectionMatrix"] = GetUniformLocation("projectionMatrix");
 	UniformLocations["viewMatrix"] = GetUniformLocation("viewMatrix");
+	UniformLocations["lightPosition"] = GetUniformLocation("lightPosition");
+	UniformLocations["lightColour"] = GetUniformLocation("lightColour");
 }

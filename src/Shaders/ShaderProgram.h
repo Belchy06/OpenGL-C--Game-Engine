@@ -6,6 +6,8 @@
 #include <fstream>
 #include <iostream>
 #include <direct.h>
+#include <windows.h>
+#include <debugapi.h>
 
 #include "../Math/Array.h"
 #include "../Math/Matrix.h"

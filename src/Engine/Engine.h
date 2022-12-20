@@ -1,10 +1,12 @@
 #pragma once
 
-#include <Windows.h>
+#include <windows.h>
 #include <tchar.h>
+#include <iostream>
 
 #include "../Textures/ModelTexture.h"
 #include "../Entities/Entity.h"
+#include "../Entities/Light.h"
 #include "../Models/RawModel.h"
 #include "../Models/TexturedModel.h"
 #include "../Shaders/StaticShader.h"
@@ -38,3 +40,4 @@ private:
 };
 
 void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
+void APIENTRY glDebugOutput(GLenum source, GLenum type, unsigned int id, GLenum severity, GLsizei length, const char* message, const void* userParam);

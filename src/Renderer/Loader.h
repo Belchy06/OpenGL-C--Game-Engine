@@ -14,7 +14,7 @@ class Loader
 public:
 	Loader();
 
-	RawModel LoadToVAO(Array<float> InPositions, Array<float> InTextureCoords, Array<int> InIndices);
+	RawModel LoadToVAO(Array<float> InPositions, Array<float> InTextureCoords, Array<int> InIndices, Array<float> InNormals);
 	GLuint LoadTexture(const char* InTexturePath);
 	void CleanUp();
 

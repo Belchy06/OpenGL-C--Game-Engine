@@ -21,6 +21,7 @@
 				"${workspaceFolder}\\src\\Models\\TexturedModel.cpp",
 				"${workspaceFolder}\\src\\Entities\\Entity.cpp",
 				"${workspaceFolder}\\src\\Entities\\Camera.cpp",
+				"${workspaceFolder}\\src\\Entities\\Light.cpp",
 				"${workspaceFolder}\\src\\Shaders\\ShaderProgram.cpp",
 				"${workspaceFolder}\\src\\Shaders\\StaticShader.cpp",
 				"${workspaceFolder}\\src\\Renderer\\Loader.cpp",

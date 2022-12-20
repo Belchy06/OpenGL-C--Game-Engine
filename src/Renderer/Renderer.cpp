@@ -24,6 +24,7 @@ void Renderer::Render(Entity InEntity, Camera InCamera)
 	glBindVertexArray(RawModel.GetVaoId());
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
+	glEnableVertexAttribArray(2);
 	Shader.LoadTransformationMatrix(Transform<float>(InEntity.GetPosition(), InEntity.GetScale(), InEntity.GetRotation()).ToMatrix());
 
 	Vector3<float> CameraPosition = InCamera.GetPosition() * -1;
@@ -37,6 +38,7 @@ void Renderer::Render(Entity InEntity, Camera InCamera)
 	glDrawElements(GL_TRIANGLES, RawModel.GetVertexCount(), GL_UNSIGNED_INT, 0);
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
+	glDisableVertexAttribArray(2);
 	glBindVertexArray(0);
 }
 

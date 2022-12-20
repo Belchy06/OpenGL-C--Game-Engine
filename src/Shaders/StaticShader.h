@@ -5,6 +5,8 @@
 
 #include "ShaderProgram.h"
 
+#include "../Entities/Light.h"
+
 #include "../ThirdParty/glew-2.1.0/include/GL/glew.h"
 
 class StaticShader : public ShaderProgram
@@ -14,6 +16,7 @@ public:
 	void LoadTransformationMatrix(Matrix4<float> InMatrix);
 	void LoadProjectionMatrix(Matrix4<float> InMatrix);
 	void LoadViewMatrix(Matrix4<float> InMatrix);
+	void LoadLight(Light InLight);
 
 protected:
 	virtual void BindAttributes() override;

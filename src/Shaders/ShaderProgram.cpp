@@ -20,7 +20,9 @@ ShaderProgram::ShaderProgram(const char* InVertexShaderPath, const char* InFragm
 	{
 		std::vector<char> ProgramErrorMessage(InfoLogLength + 1);
 		glGetProgramInfoLog(ProgramID, InfoLogLength, NULL, &ProgramErrorMessage[0]);
-		printf("%s\n", &ProgramErrorMessage[0]);
+		std::string ErrorMsg(ProgramErrorMessage.data());
+		OutputDebugStringA(ErrorMsg.c_str());
+		exit(-2);
 	}
 }
 
@@ -38,13 +40,19 @@ GLuint ShaderProgram::LoadShader(const char* InShaderPath, int InShaderType)
 	}
 	else
 	{
+		std::string Path(InShaderPath);
+		OutputDebugString(L"Impossible to open ");
+		OutputDebugStringA(Path.c_str());
+		OutputDebugString(L" . Are you in the right directory?\n");
+
 		char temp[256];
 		if (_getcwd(temp, 256) != 0)
 		{
-			printf("%s", temp);
+			std::string Str(InShaderPath);
+			OutputDebugString(L"CWD: ");
+			OutputDebugStringA(Str.c_str());
 		}
-		printf("Impossible to open %s. Are you in the right directory?\n", InShaderPath);
-		return 0;
+		exit(-2);
 	}
 
 	// Create the shaders
@@ -65,7 +73,9 @@ GLuint ShaderProgram::LoadShader(const char* InShaderPath, int InShaderType)
 	{
 		std::vector<char> ShaderErrorMessage(InfoLogLength + 1);
 		glGetShaderInfoLog(ShaderID, InfoLogLength, NULL, &ShaderErrorMessage[0]);
-		printf("%s\n", &ShaderErrorMessage[0]);
+		std::string ErrorMsg(ShaderErrorMessage.data());
+		OutputDebugStringA(ErrorMsg.c_str());
+		exit(-2);
 	}
 
 	return ShaderID;

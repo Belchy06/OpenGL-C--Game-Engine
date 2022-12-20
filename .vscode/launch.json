@@ -9,7 +9,7 @@
 			"cwd": "${workspaceFolder}",
 			"stopAtEntry": false,
 			"environment": [],
-			"console": "integratedTerminal",
+			"console": "internalConsole",
 			"type": "cppvsdbg",
 		}
 	],

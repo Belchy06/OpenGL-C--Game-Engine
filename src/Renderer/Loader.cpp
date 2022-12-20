@@ -7,13 +7,14 @@ Loader::Loader()
 	Textures = Array<GLuint>();
 }
 
-RawModel Loader::LoadToVAO(Array<float> InPositions, Array<float> InTextureCoords, Array<int> InIndices)
+RawModel Loader::LoadToVAO(Array<float> InPositions, Array<float> InTextureCoords, Array<int> InIndices, Array<float> InNormals)
 {
 	GLuint VaoID;
 	CreateVAO(VaoID);
 	BindIndicesBuffer(InIndices);
 	StoreDataInAttributeList(0, 3, InPositions);
 	StoreDataInAttributeList(1, 2, InTextureCoords);
+	StoreDataInAttributeList(2, 3, InNormals);
 	UnbindVAO();
 	return RawModel(VaoID, InIndices.Length());
 }

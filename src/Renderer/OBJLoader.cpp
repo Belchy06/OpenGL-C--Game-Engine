@@ -83,7 +83,7 @@ RawModel OBJLoader::LoadObjModel(const char* InFilePath, Loader InModelLoader)
 		i++;
 	});
 
-	return InModelLoader.LoadToVAO(VerticesArray, TexturesArray, IndicesArray);
+	return InModelLoader.LoadToVAO(VerticesArray, TexturesArray, IndicesArray, NormalsArray);
 }
 
 void OBJLoader::ProcessVertex(std::vector<std::string> InVertexData, Array<int>& InIndices, Array<Vector2<float>>& InTextures, Array<Vector3<float>>& InNormals, Array<float>& InTexturesArray, Array<float>& InNormalsArray)
