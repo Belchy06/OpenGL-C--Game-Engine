@@ -22,6 +22,8 @@ RawModel Loader::LoadToVAO(Array<float> InPositions, Array<float> InTextureCoord
 GLuint Loader::LoadTexture(const char* InTexturePath)
 {
 	GLuint TextureID = SOIL_load_OGL_texture(InTexturePath, SOIL_LOAD_RGBA, SOIL_CREATE_NEW_ID, SOIL_FLAG_INVERT_Y);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	Textures.Add(TextureID);
 	return TextureID;
 }

@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#include "../Math/Array.h"
+#include "../Containers/Array.h"
 #include "../Models/RawModel.h"
 
 #include "../ThirdParty/soil/include/SOIL2.h"

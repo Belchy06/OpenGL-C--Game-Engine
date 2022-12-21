@@ -40,6 +40,7 @@ Engine::Engine()
 	ModelLoader = new Loader();
 	SceneRenderer = new MasterRenderer();
 	Cam = new Camera();
+	Cam->SetPosition(Vector3<float>(0, 50, 0));
 
 	EnginePtr = this;
 
@@ -114,22 +115,34 @@ int Engine::Loop()
 
 	Light Sun(Vector3<float>(3000, 2000, 3000), Vector3<float>(1.f));
 
-	Array<Entity> Cubes;
-
+	Array<Entity> Entities;
 	for (int i = 0; i < 200; i++)
 	{
 		float X = (float)(rand() / 32767.f) * 100.f - 50.f;
 		float Y = (float)(rand() / 32767.f) * 100.f - 50.f;
 		float Z = (float)(rand() / 32767.f) * -300.f;
-		Cubes.Add(Entity(TextureModel, Vector3<float>(X, Y, Z), Rotator<float>(rand(), rand(), rand()), Vector3<float>::OneVector()));
+		Entities.Add(Entity(TextureModel, Vector3<float>(X, Y, Z), Rotator<float>(rand(), rand(), rand()), Vector3<float>::OneVector()));
+	}
+
+	Array<Terrain> Terrains;
+	for (int i = -2; i <= 2; i++)
+	{
+		for (int j = -2; j <= 2; j++)
+		{
+			Terrains.Add(Terrain(i, j, *ModelLoader, ModelTexture(ModelLoader->LoadTexture("./res/image.png"))));
+		}
 	}
 
 	while (glfwGetKey(Window, GLFW_KEY_ESCAPE) != GLFW_PRESS && glfwWindowShouldClose(Window) == 0)
 	{
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		Cubes.ForEach([this](Entity Cube) {
-			SceneRenderer->ProcessEntity(Cube);
+		Terrains.ForEach([this](Terrain InTerrain) {
+			SceneRenderer->ProcessTerrain(InTerrain);
+		});
+
+		Entities.ForEach([this](Entity InEntity) {
+			SceneRenderer->ProcessEntity(InEntity);
 		});
 
 		SceneRenderer->Render(Sun, *Cam);

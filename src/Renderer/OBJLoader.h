@@ -7,7 +7,7 @@
 #include "Loader.h"
 
 #include "../Math/Vector.h"
-#include "../String/String.h"
+#include "../Containers/String.h"
 
 #include "../Models/RawModel.h"
 

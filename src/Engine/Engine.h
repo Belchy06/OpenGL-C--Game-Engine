@@ -11,6 +11,7 @@
 #include "../Textures/ModelTexture.h"
 #include "../Entities/Entity.h"
 #include "../Entities/Light.h"
+#include "../Terrain/Terrain.h"
 #include "../Models/RawModel.h"
 #include "../Models/TexturedModel.h"
 #include "../Shaders/StaticShader.h"

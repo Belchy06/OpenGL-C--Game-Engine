@@ -4,7 +4,7 @@
  * Templated matrix classes
  */
 
-#include "Array.h"
+#include "../Containers/Array.h"
 #include "Vector.h"
 #include "Transform.h"
 #include <utility>
