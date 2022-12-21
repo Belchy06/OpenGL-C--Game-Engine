@@ -1,3 +1,7 @@
 #pragma once
 
 #define DEFAULT_CAMERA_SPEED 2.f
+#define DEFAULT_RES_X 1280.f
+#define DEFAULT_RES_Y 768.f
+#define DEFAULT_MAX_FPS 60.f
+#define DEFAULT_ASPECT_RATIO 1.778f

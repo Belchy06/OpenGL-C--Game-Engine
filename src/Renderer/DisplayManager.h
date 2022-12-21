@@ -11,7 +11,7 @@
 class DisplayManager
 {
 public:
-	static GLFWwindow* CreateDisplay();
+	static GLFWwindow* CreateDisplay(int InX, int InY);
 	static void UpdateDisplay();
 	static void CloseDisplay();
 

@@ -13,7 +13,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 	OutputDebugString(WCmdLine.c_str());
 
 	OutputDebugString(L"\n");
-	// clang-format off
+// clang-format off
 	#pragma warning( suppress: 4244 )
 	std::string CmdLine(WCmdLine.begin(), WCmdLine.end());
 	// clang-format on
@@ -25,26 +25,6 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 
 Engine::Engine()
 {
-	Window = DisplayManager::CreateDisplay();
-	int Flags;
-	glGetIntegerv(GL_CONTEXT_FLAGS, &Flags);
-	if (Flags & GL_CONTEXT_FLAG_DEBUG_BIT)
-	{
-		glEnable(GL_DEBUG_OUTPUT);
-		glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
-		glDebugMessageCallback(glDebugOutput, nullptr);
-		glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
-	}
-
-	glfwSetKeyCallback(Window, keyCallback);
-	ModelLoader = new Loader();
-	SceneRenderer = new MasterRenderer();
-	Cam = new Camera();
-	Cam->SetPosition(Vector3<float>(0, 50, 0));
-
-	EnginePtr = this;
-
-	srand(time(NULL));
 }
 
 Engine::~Engine()
@@ -58,6 +38,10 @@ int Engine::Init(std::string CommandLine)
 
 	/* Initialize default values */
 	Options["CameraSpeed"] = DEFAULT_CAMERA_SPEED;
+	Options["ResX"] = DEFAULT_RES_X;
+	Options["ResY"] = DEFAULT_RES_Y;
+	Options["MaxFPS"] = DEFAULT_MAX_FPS;
+	Options["AspectRatio"] = DEFAULT_ASPECT_RATIO;
 
 	if (CommandLine.size())
 	{
@@ -80,13 +64,60 @@ int Engine::Init(std::string CommandLine)
 		{
 			ParseConfig(DEFAULT_ENGINE_INI);
 		}
+
+		if (MappedArgs.find("Res") != MappedArgs.end())
+		{
+			string ResString = MappedArgs["Res"];
+			vector<string> ResComps = String::Split(ResString, "x");
+			if (ResComps.size() == 2)
+			{
+				Options["ResX"] = stof(ResComps[0]);
+				Options["ResY"] = stof(ResComps[1]);
+			}
+		}
+		else if (MappedArgs.find("ResX") != MappedArgs.end())
+		{
+			Options["ResX"] = stof(MappedArgs["ResX"]);
+			if (MappedArgs.find("ResY") != MappedArgs.end())
+			{
+				Options["ResY"] = stof(MappedArgs["ResY"]);
+			}
+			else
+			{
+				Options["ResY"] = Options["ResX"] * Options["AspectRatio"];
+			}
+		}
+		else if (MappedArgs.find("ResY") != MappedArgs.end())
+		{
+			Options["ResX"] = Options["ResY"] / Options["AspectRatio"];
+		}
 	}
 
+	Window = DisplayManager::CreateDisplay(Options["ResX"], Options["ResY"]);
+	int Flags;
+	glGetIntegerv(GL_CONTEXT_FLAGS, &Flags);
+	if (Flags & GL_CONTEXT_FLAG_DEBUG_BIT)
+	{
+		glEnable(GL_DEBUG_OUTPUT);
+		glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+		glDebugMessageCallback(glDebugOutput, nullptr);
+		glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
+	}
+
+	glfwSetKeyCallback(Window, keyCallback);
+	ModelLoader = new Loader();
+	SceneRenderer = new MasterRenderer();
+	Cam = new Camera();
+	Cam->SetPosition(Vector3<float>(0, 50, 0));
+
+	EnginePtr = this;
+	srand(time(NULL));
 	return 0;
 }
 
 void Engine::ParseConfig(std::string InConfigPath)
 {
+	using namespace std;
 	std::ifstream File;
 	File.open(InConfigPath);
 
@@ -96,7 +127,25 @@ void Engine::ParseConfig(std::string InConfigPath)
 		while (std::getline(File, Line))
 		{
 			std::vector<std::string> KeyValue = String::Split(Line, "=");
-			if (KeyValue.size() == 2)
+			if (KeyValue[0] == "Res")
+			{
+				string ResString = KeyValue[1];
+				vector<string> ResComps = String::Split(ResString, "x");
+				if (ResComps.size() == 2)
+				{
+					Options["ResX"] = stof(ResComps[0]);
+					Options["ResY"] = stof(ResComps[1]);
+				}
+			}
+			else if (KeyValue[0] == "ResX")
+			{
+				Options["ResX"] = stof(KeyValue[1]);
+			}
+			else if (KeyValue[0] == "ResY")
+			{
+				Options["ResY"] = stof(KeyValue[1]);
+			}
+			else if (KeyValue.size() == 2)
 			{
 				Options[KeyValue[0]] = std::stof(KeyValue[1]);
 			}
@@ -142,6 +191,7 @@ int Engine::Loop()
 		}
 	}
 
+	// TODO: Check timing incase we need to wait to be under MaxFPS
 	while (glfwGetKey(Window, GLFW_KEY_ESCAPE) != GLFW_PRESS && glfwWindowShouldClose(Window) == 0)
 	{
 		glClear(GL_COLOR_BUFFER_BIT);

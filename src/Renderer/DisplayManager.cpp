@@ -2,7 +2,7 @@
 
 GLFWwindow* DisplayManager::Window;
 
-GLFWwindow* DisplayManager::CreateDisplay()
+GLFWwindow* DisplayManager::CreateDisplay(int InX, int InY)
 {
 	glewExperimental = GL_TRUE;
 	if (!glfwInit())
@@ -19,7 +19,7 @@ GLFWwindow* DisplayManager::CreateDisplay()
 	glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);
 
 	// Open a window and create its OpenGL context
-	Window = glfwCreateWindow(1024, 768, "Engine", NULL, NULL);
+	Window = glfwCreateWindow(InX, InY, "Engine", NULL, NULL);
 	if (Window == NULL)
 	{
 		OutputDebugString(L"Failed to open GLFW window. If you have an Intel GPU, they are not 3.3 compatible. Try the 2.1 version of the tutorials.\n");
