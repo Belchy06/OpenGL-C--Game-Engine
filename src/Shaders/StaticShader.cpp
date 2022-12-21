@@ -48,6 +48,11 @@ void StaticShader::LoadUseFakeLighting(bool bUseFakeLighting)
 	LoadBool(UniformLocations["useFakeLighting"], bUseFakeLighting);
 }
 
+void StaticShader::LoadSkyColour(Vector3<float> InColour)
+{
+	LoadVector(UniformLocations["skyColour"], InColour);
+}
+
 void StaticShader::GetAllUniformLocations()
 {
 	UniformLocations["transformationMatrix"] = GetUniformLocation("transformationMatrix");
@@ -58,4 +63,5 @@ void StaticShader::GetAllUniformLocations()
 	UniformLocations["shineDamper"] = GetUniformLocation("shineDamper");
 	UniformLocations["reflectivity"] = GetUniformLocation("reflectivity");
 	UniformLocations["useFakeLighting"] = GetUniformLocation("useFakeLighting");
+	UniformLocations["skyColour"] = GetUniformLocation("skyColour");
 }

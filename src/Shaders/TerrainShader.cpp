@@ -43,6 +43,11 @@ void TerrainShader::LoadShineVariables(float Damper, float Reflectivity)
 	LoadFloat(UniformLocations["reflectivity"], Reflectivity);
 }
 
+void TerrainShader::LoadSkyColour(Vector3<float> InColour)
+{
+	LoadVector(UniformLocations["skyColour"], InColour);
+}
+
 void TerrainShader::GetAllUniformLocations()
 {
 	UniformLocations["transformationMatrix"] = GetUniformLocation("transformationMatrix");
@@ -52,4 +57,5 @@ void TerrainShader::GetAllUniformLocations()
 	UniformLocations["lightColour"] = GetUniformLocation("lightColour");
 	UniformLocations["shineDamper"] = GetUniformLocation("shineDamper");
 	UniformLocations["reflectivity"] = GetUniformLocation("reflectivity");
+	UniformLocations["skyColour"] = GetUniformLocation("skyColour");
 }

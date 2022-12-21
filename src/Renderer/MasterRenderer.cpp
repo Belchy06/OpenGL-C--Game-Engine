@@ -3,6 +3,7 @@
 float MasterRenderer::FOV = 70.f;
 float MasterRenderer::NEAR_PLANE = .1f;
 float MasterRenderer::FAR_PLANE = 1000.f;
+Vector3<float> MasterRenderer::SKY_COLOUR = Vector3<float>(0.529, 0.808, 0.929);
 
 MasterRenderer::MasterRenderer()
 	: ShaderEntity()
@@ -22,6 +23,7 @@ void MasterRenderer::Render(Light InSun, Camera InCamera)
 {
 	Prepare();
 	ShaderEntity.Start();
+	ShaderEntity.LoadSkyColour(SKY_COLOUR);
 	ShaderEntity.LoadLight(InSun);
 	ShaderEntity.LoadViewMatrix(InCamera.GetTransformationMatrix());
 	RendererEntity.Render(Entities);
@@ -29,6 +31,7 @@ void MasterRenderer::Render(Light InSun, Camera InCamera)
 	Entities.clear();
 
 	ShaderTerrain.Start();
+	ShaderTerrain.LoadSkyColour(SKY_COLOUR);
 	ShaderTerrain.LoadLight(InSun);
 	ShaderTerrain.LoadViewMatrix(InCamera.GetTransformationMatrix());
 	RendererTerrain.Render(Terrains);
@@ -84,5 +87,5 @@ void MasterRenderer::Prepare()
 {
 	glEnable(GL_DEPTH_TEST);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glClearColor(1, 0, 0, 1);
+	glClearColor(SKY_COLOUR.X, SKY_COLOUR.Y, SKY_COLOUR.Z, 1);
 }

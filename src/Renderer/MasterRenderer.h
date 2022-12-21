@@ -54,4 +54,5 @@ private:
 	static float FOV;
 	static float NEAR_PLANE;
 	static float FAR_PLANE;
+	static Vector3<float> SKY_COLOUR;
 };

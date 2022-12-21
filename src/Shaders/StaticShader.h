@@ -19,6 +19,7 @@ public:
 	void LoadLight(Light InLight);
 	void LoadShineVariables(float Damper, float Reflectivity);
 	void LoadUseFakeLighting(bool bUseFakeLighting);
+	void LoadSkyColour(Vector3<float> InColour);
 
 protected:
 	virtual void BindAttributes() override;
