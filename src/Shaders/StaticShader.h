@@ -21,7 +21,6 @@ public:
 	void LoadUseFakeLighting(bool bUseFakeLighting);
 	void LoadSkyColour(Vector3<float> InColour);
 
-protected:
 	virtual void BindAttributes() override;
 	virtual void GetAllUniformLocations() override;
 

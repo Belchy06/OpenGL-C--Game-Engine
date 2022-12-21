@@ -19,8 +19,8 @@ public:
 	void LoadLight(Light InLight);
 	void LoadShineVariables(float Damper, float Reflectivity);
 	void LoadSkyColour(Vector3<float> InColour);
+	void ConnectTextureUnits();
 
-protected:
 	virtual void BindAttributes() override;
 	virtual void GetAllUniformLocations() override;
 

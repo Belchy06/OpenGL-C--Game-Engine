@@ -58,4 +58,18 @@ void TerrainShader::GetAllUniformLocations()
 	UniformLocations["shineDamper"] = GetUniformLocation("shineDamper");
 	UniformLocations["reflectivity"] = GetUniformLocation("reflectivity");
 	UniformLocations["skyColour"] = GetUniformLocation("skyColour");
+	UniformLocations["backgroundTexture"] = GetUniformLocation("backgroundTexture");
+	UniformLocations["rTexture"] = GetUniformLocation("rTexture");
+	UniformLocations["gTexture"] = GetUniformLocation("gTexture");
+	UniformLocations["bTexture"] = GetUniformLocation("bTexture");
+	UniformLocations["blendMap"] = GetUniformLocation("blendMap");
+}
+
+void TerrainShader::ConnectTextureUnits()
+{
+	LoadInt(UniformLocations["backgroundTexture"], 0);
+	LoadInt(UniformLocations["rTexture"], 1);
+	LoadInt(UniformLocations["gTexture"], 2);
+	LoadInt(UniformLocations["bTexture"], 3);
+	LoadInt(UniformLocations["blendMap"], 4);
 }

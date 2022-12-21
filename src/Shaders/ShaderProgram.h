@@ -24,15 +24,17 @@ public:
 	void Stop();
 	void CleanUp();
 
-protected:
 	virtual void BindAttributes() = 0;
 	virtual void GetAllUniformLocations() = 0;
+
+protected:
 	void BindAttribute(GLuint InAttribute, const char* InVariableName);
 	GLuint GetUniformLocation(const char* InUniformName);
 	void LoadFloat(GLuint InLocation, float InFloat);
 	void LoadVector(GLuint InLocation, Vector3<float> InVector);
 	void LoadBool(GLuint InLocation, bool InBool);
 	void LoadMatrix(GLuint InLocation, Matrix4<float> InMatrix);
+	void LoadInt(GLuint InLocation, int InInt);
 
 private:
 	GLuint LoadShader(const char* InShaderPath, int InShaderType);

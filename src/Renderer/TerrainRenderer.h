@@ -18,6 +18,7 @@ private:
 	void PrepareTerrain(Terrain InTerrain);
 	void UnbindTerrain();
 	void LoadModelTransformation(Terrain InTerrain);
+	void BindTextures(Terrain InTerrain);
 
 	TerrainShader Shader;
 	Matrix4<float> ProjectionMatrix;

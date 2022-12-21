@@ -131,3 +131,8 @@ void ShaderProgram::LoadMatrix(GLuint InLocation, Matrix4<float> InMatrix)
 {
 	glUniformMatrix4fv(InLocation, 1, false, InMatrix.GetData());
 }
+
+void ShaderProgram::LoadInt(GLuint InLocation, int InInt)
+{
+	glUniform1i(InLocation, InInt);
+}

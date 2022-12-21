@@ -13,7 +13,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 	OutputDebugString(WCmdLine.c_str());
 
 	OutputDebugString(L"\n");
-// clang-format off
+	// clang-format off
 	#pragma warning( suppress: 4244 )
 	std::string CmdLine(WCmdLine.begin(), WCmdLine.end());
 	// clang-format on
@@ -127,11 +127,18 @@ int Engine::Loop()
 	}
 
 	Array<Terrain> Terrains;
+	TerrainTexture BackgroundTexture(ModelLoader->LoadTexture("./res/terrain.png"));
+	TerrainTexture RTexture(ModelLoader->LoadTexture("./res/mud.png"));
+	TerrainTexture GTexture(ModelLoader->LoadTexture("./res/grassFlowers.png"));
+	TerrainTexture BTexture(ModelLoader->LoadTexture("./res/path.png"));
+	TerrainTexturePack TexturePack(BackgroundTexture, RTexture, GTexture, BTexture);
+
+	TerrainTexture BlendMap(ModelLoader->LoadTexture("./res/blendMap.png"));
 	for (int i = -2; i <= 2; i++)
 	{
 		for (int j = -2; j <= 2; j++)
 		{
-			Terrains.Add(Terrain(i, j, *ModelLoader, ModelTexture(ModelLoader->LoadTexture("./res/terrain.png"))));
+			Terrains.Add(Terrain(i, j, *ModelLoader, BlendMap, TexturePack));
 		}
 	}
 

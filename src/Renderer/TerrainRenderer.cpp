@@ -6,6 +6,7 @@ TerrainRenderer::TerrainRenderer(TerrainShader InTerrainShader, Matrix4<float> I
 {
 	Shader.Start();
 	Shader.LoadProjectionMatrix(InProjectionMatrix);
+	Shader.ConnectTextureUnits();
 	Shader.Stop();
 }
 
@@ -28,10 +29,23 @@ void TerrainRenderer::PrepareTerrain(Terrain InTerrain)
 	glEnableVertexAttribArray(1);
 	glEnableVertexAttribArray(2);
 
-	ModelTexture Texture = InTerrain.GetTexture();
-	Shader.LoadShineVariables(Texture.GetShineDamper(), Texture.GetReflectivity());
+	BindTextures(InTerrain);
+	Shader.LoadShineVariables(1, 0);
+}
+
+void TerrainRenderer::BindTextures(Terrain InTerrain)
+{
+	TerrainTexturePack TexturePack = InTerrain.GetTexturePack();
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, Texture.GetTextureID());
+	glBindTexture(GL_TEXTURE_2D, TexturePack.GetBackgroundTexture().GetTextureID());
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, TexturePack.GetRTexture().GetTextureID());
+	glActiveTexture(GL_TEXTURE2);
+	glBindTexture(GL_TEXTURE_2D, TexturePack.GetGTexture().GetTextureID());
+	glActiveTexture(GL_TEXTURE3);
+	glBindTexture(GL_TEXTURE_2D, TexturePack.GetBTexture().GetTextureID());
+	glActiveTexture(GL_TEXTURE4);
+	glBindTexture(GL_TEXTURE_2D, InTerrain.GetBlendMap().GetTextureID());
 }
 
 void TerrainRenderer::UnbindTerrain()

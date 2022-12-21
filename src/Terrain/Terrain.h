@@ -3,15 +3,17 @@
 #include "../Containers/Array.h"
 #include "../Renderer/Loader.h"
 #include "../Models/RawModel.h"
-#include "../Textures/ModelTexture.h"
+#include "../Textures/TerrainTexture.h"
+#include "../Textures/TerrainTexturePack.h"
 
 class Terrain
 {
 public:
-	Terrain(int InGridX, int InGridZ, Loader InModelLoader, ModelTexture InTexture);
+	Terrain(int InGridX, int InGridZ, Loader InModelLoader, TerrainTexture InBlendMap, TerrainTexturePack InTexturePack);
 
 	RawModel GetModel() { return Model; }
-	ModelTexture GetTexture() { return Texture; }
+	TerrainTexturePack GetTexturePack() { return TexturePack; }
+	TerrainTexture GetBlendMap() { return BlendMap; }
 	float GetX() { return X; }
 	float GetZ() { return Z; }
 
@@ -22,7 +24,8 @@ private:
 	float Z;
 
 	RawModel Model;
-	ModelTexture Texture;
+	TerrainTexture BlendMap;
+	TerrainTexturePack TexturePack;
 
 	static float SIZE;
 	static float VERTEX_COUNT;
