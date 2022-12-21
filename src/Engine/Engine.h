@@ -6,11 +6,14 @@
 #include <iostream>
 #include <cstdlib>
 #include <sstream>
+#include <chrono>
+#include <ctime>
 
 #include "Defaults.h"
 #include "../Textures/ModelTexture.h"
 #include "../Entities/Entity.h"
 #include "../Entities/Light.h"
+#include "../Entities/Player.h"
 #include "../Terrain/Terrain.h"
 #include "../Models/RawModel.h"
 #include "../Models/TexturedModel.h"
@@ -36,6 +39,7 @@ public:
 	void HandleKey(GLFWwindow* InWindow, int InKey, int InScancode, int InAction, int InMods);
 
 	static Engine* GetEngine();
+	static std::map<std::string, float> OPTIONS;
 
 private:
 	void ParseConfig(std::string InConfigPath);
@@ -44,12 +48,15 @@ private:
 	Loader* ModelLoader;
 	MasterRenderer* SceneRenderer;
 	Camera* Cam;
+	Player* User;
 
 	std::map<std::string, std::string> MappedArgs;
 
-	std::map<std::string, float> Options;
-
 	static Engine* EnginePtr;
+
+	std::chrono::system_clock::time_point LastFrameTime;
+	std::chrono::duration<float> DeltaTime;
+	float TargetFrameDelta;
 };
 
 void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);

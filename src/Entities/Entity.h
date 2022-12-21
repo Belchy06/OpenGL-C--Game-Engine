@@ -7,15 +7,13 @@
 class Entity
 {
 public:
-	Entity(TexturedModel InModel,
-		Vector3<float> InPosition,
-		Rotator<float> InRotation,
-		Vector3<float> InScale);
+	Entity(TexturedModel InModel, Vector3<float> InPosition, Rotator<float> InRotation, Vector3<float> InScale);
 
 	void IncreasePosition(Vector3<float> Delta);
 	void IncreaseRotation(Vector3<float> Delta);
 
 	Vector3<float> GetPosition() { return Position; }
+	void SetPosition(Vector3<float> InPosition) { Position = InPosition; }
 	TexturedModel GetModel() { return Model; }
 	Rotator<float> GetRotation() { return Rotation; }
 	Vector3<float> GetScale() { return Scale; }

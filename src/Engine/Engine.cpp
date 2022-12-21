@@ -1,6 +1,7 @@
 #include "Engine.h"
 
 Engine* Engine::EnginePtr = nullptr;
+std::map<std::string, float> Engine::OPTIONS;
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
 {
@@ -13,7 +14,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 	OutputDebugString(WCmdLine.c_str());
 
 	OutputDebugString(L"\n");
-// clang-format off
+	// clang-format off
 	#pragma warning( suppress: 4244 )
 	std::string CmdLine(WCmdLine.begin(), WCmdLine.end());
 	// clang-format on
@@ -37,11 +38,12 @@ int Engine::Init(std::string CommandLine)
 	using namespace std;
 
 	/* Initialize default values */
-	Options["CameraSpeed"] = DEFAULT_CAMERA_SPEED;
-	Options["ResX"] = DEFAULT_RES_X;
-	Options["ResY"] = DEFAULT_RES_Y;
-	Options["MaxFPS"] = DEFAULT_MAX_FPS;
-	Options["AspectRatio"] = DEFAULT_ASPECT_RATIO;
+	OPTIONS["CameraSpeed"] = DEFAULT_CAMERA_SPEED;
+	OPTIONS["ResX"] = DEFAULT_RES_X;
+	OPTIONS["ResY"] = DEFAULT_RES_Y;
+	OPTIONS["MaxFPS"] = DEFAULT_MAX_FPS;
+	OPTIONS["AspectRatio"] = DEFAULT_ASPECT_RATIO;
+	OPTIONS["PlayerRunSpeed"] = DEFAULT_CAMERA_SPEED;
 
 	if (CommandLine.size())
 	{
@@ -71,29 +73,29 @@ int Engine::Init(std::string CommandLine)
 			vector<string> ResComps = String::Split(ResString, "x");
 			if (ResComps.size() == 2)
 			{
-				Options["ResX"] = stof(ResComps[0]);
-				Options["ResY"] = stof(ResComps[1]);
+				OPTIONS["ResX"] = stof(ResComps[0]);
+				OPTIONS["ResY"] = stof(ResComps[1]);
 			}
 		}
 		else if (MappedArgs.find("ResX") != MappedArgs.end())
 		{
-			Options["ResX"] = stof(MappedArgs["ResX"]);
+			OPTIONS["ResX"] = stof(MappedArgs["ResX"]);
 			if (MappedArgs.find("ResY") != MappedArgs.end())
 			{
-				Options["ResY"] = stof(MappedArgs["ResY"]);
+				OPTIONS["ResY"] = stof(MappedArgs["ResY"]);
 			}
 			else
 			{
-				Options["ResY"] = Options["ResX"] * Options["AspectRatio"];
+				OPTIONS["ResY"] = OPTIONS["ResX"] * OPTIONS["AspectRatio"];
 			}
 		}
 		else if (MappedArgs.find("ResY") != MappedArgs.end())
 		{
-			Options["ResX"] = Options["ResY"] / Options["AspectRatio"];
+			OPTIONS["ResX"] = OPTIONS["ResY"] / OPTIONS["AspectRatio"];
 		}
 	}
 
-	Window = DisplayManager::CreateDisplay(Options["ResX"], Options["ResY"]);
+	Window = DisplayManager::CreateDisplay(OPTIONS["ResX"], OPTIONS["ResY"]);
 	int Flags;
 	glGetIntegerv(GL_CONTEXT_FLAGS, &Flags);
 	if (Flags & GL_CONTEXT_FLAG_DEBUG_BIT)
@@ -108,10 +110,15 @@ int Engine::Init(std::string CommandLine)
 	ModelLoader = new Loader();
 	SceneRenderer = new MasterRenderer();
 	Cam = new Camera();
-	Cam->SetPosition(Vector3<float>(0, 50, 0));
+	Cam->SetPosition(Vector3<float>(0, 5, 10));
+
+	User = new Player(TexturedModel(OBJLoader::LoadObjModel("./res/bunny.obj", *ModelLoader), ModelTexture(ModelLoader->LoadTexture("./res/white.png"))), Vector3<float>::ZeroVector(), Rotator<float>::ZeroRotator(), Vector3<float>::OneVector());
 
 	EnginePtr = this;
 	srand(time(NULL));
+
+	TargetFrameDelta = 1.f / OPTIONS["MaxFPS"];
+	LastFrameTime = std::chrono::system_clock::now();
 	return 0;
 }
 
@@ -133,21 +140,21 @@ void Engine::ParseConfig(std::string InConfigPath)
 				vector<string> ResComps = String::Split(ResString, "x");
 				if (ResComps.size() == 2)
 				{
-					Options["ResX"] = stof(ResComps[0]);
-					Options["ResY"] = stof(ResComps[1]);
+					OPTIONS["ResX"] = stof(ResComps[0]);
+					OPTIONS["ResY"] = stof(ResComps[1]);
 				}
 			}
 			else if (KeyValue[0] == "ResX")
 			{
-				Options["ResX"] = stof(KeyValue[1]);
+				OPTIONS["ResX"] = stof(KeyValue[1]);
 			}
 			else if (KeyValue[0] == "ResY")
 			{
-				Options["ResY"] = stof(KeyValue[1]);
+				OPTIONS["ResY"] = stof(KeyValue[1]);
 			}
 			else if (KeyValue.size() == 2)
 			{
-				Options[KeyValue[0]] = std::stof(KeyValue[1]);
+				OPTIONS[KeyValue[0]] = std::stof(KeyValue[1]);
 			}
 		}
 	}
@@ -192,9 +199,19 @@ int Engine::Loop()
 	}
 
 	// TODO: Check timing incase we need to wait to be under MaxFPS
+
 	while (glfwGetKey(Window, GLFW_KEY_ESCAPE) != GLFW_PRESS && glfwWindowShouldClose(Window) == 0)
 	{
+		DeltaTime = std::chrono::system_clock::now() - LastFrameTime;
+		if (DeltaTime.count() < TargetFrameDelta)
+		{
+			continue;
+		}
+
 		glClear(GL_COLOR_BUFFER_BIT);
+
+		User->Tick(DeltaTime.count());
+		SceneRenderer->ProcessEntity(*User);
 
 		Terrains.ForEach([this](Terrain InTerrain) {
 			SceneRenderer->ProcessTerrain(InTerrain);
@@ -208,6 +225,7 @@ int Engine::Loop()
 		// Swap buffers
 		glfwSwapBuffers(Window);
 		glfwPollEvents();
+		LastFrameTime = std::chrono::system_clock::now();
 	}
 
 	SceneRenderer->CleanUp();
@@ -217,26 +235,13 @@ int Engine::Loop()
 
 void Engine::HandleKey(GLFWwindow* Window, int Key, int Scancode, int Action, int Mods)
 {
-	switch (Key)
+	if (Action == GLFW_PRESS)
 	{
-		case GLFW_KEY_W:
-			Cam->IncreasePosition(Vector3<float>(0.f, 0.f, -Options["CameraSpeed"]));
-			break;
-		case GLFW_KEY_S:
-			Cam->IncreasePosition(Vector3<float>(0.f, 0.f, Options["CameraSpeed"]));
-			break;
-		case GLFW_KEY_A:
-			Cam->IncreasePosition(Vector3<float>(-Options["CameraSpeed"], 0.f, 0.f));
-			break;
-		case GLFW_KEY_D:
-			Cam->IncreasePosition(Vector3<float>(Options["CameraSpeed"], 0.f, 0.f));
-			break;
-		case GLFW_KEY_LEFT_CONTROL:
-			Cam->IncreasePosition(Vector3<float>(0.f, -Options["CameraSpeed"], 0.f));
-			break;
-		case GLFW_KEY_SPACE:
-			Cam->IncreasePosition(Vector3<float>(0.f, Options["CameraSpeed"], 0.f));
-			break;
+		User->HandleKeyDown(Key);
+	}
+	else if (Action == GLFW_RELEASE)
+	{
+		User->HandleKeyUp(Key);
 	}
 }
 
