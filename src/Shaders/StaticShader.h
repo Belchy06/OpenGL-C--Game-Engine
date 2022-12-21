@@ -18,6 +18,7 @@ public:
 	void LoadViewMatrix(Matrix4<float> InMatrix);
 	void LoadLight(Light InLight);
 	void LoadShineVariables(float Damper, float Reflectivity);
+	void LoadUseFakeLighting(bool bUseFakeLighting);
 
 protected:
 	virtual void BindAttributes() override;

@@ -1,10 +1,9 @@
 #include "EntityRenderer.h"
+#include "MasterRenderer.h"
 
 EntityRenderer::EntityRenderer(StaticShader InShader, Matrix4<float> InProjectionMatrix)
 	: Shader(InShader)
 {
-	glEnable(GL_CULL_FACE);
-	glCullFace(GL_BACK);
 	Shader.Start();
 	Shader.LoadProjectionMatrix(InProjectionMatrix);
 	Shader.Stop();
@@ -37,6 +36,11 @@ void EntityRenderer::PrepareTexturedModel(TexturedModel InModel)
 	glEnableVertexAttribArray(2);
 
 	ModelTexture Texture = InModel.GetModelTexture();
+	if (Texture.IsTransparent())
+	{
+		MasterRenderer::SetCulling(false);
+	}
+	Shader.LoadUseFakeLighting(Texture.IsUsingFakeLighting());
 	Shader.LoadShineVariables(Texture.GetShineDamper(), Texture.GetReflectivity());
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, Texture.GetTextureID());
@@ -44,6 +48,7 @@ void EntityRenderer::PrepareTexturedModel(TexturedModel InModel)
 
 void EntityRenderer::UnbindTexturedModel()
 {
+	MasterRenderer::SetCulling(true);
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
 	glDisableVertexAttribArray(2);

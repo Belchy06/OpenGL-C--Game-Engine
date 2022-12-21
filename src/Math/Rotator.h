@@ -18,6 +18,8 @@ template <typename T>
 class Rotator : public Vector3<T>
 {
 public:
+	static Rotator<T> ZeroRotator() { return Rotator<T>(0.f); }
+
 	Rotator(T InValue)
 		: Vector3(InValue)
 	{

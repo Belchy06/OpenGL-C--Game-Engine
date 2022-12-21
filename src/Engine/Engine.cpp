@@ -108,20 +108,22 @@ void Engine::ParseConfig(std::string InConfigPath)
 
 int Engine::Loop()
 {
-	RawModel Model = OBJLoader::LoadObjModel("./res/dragon.obj", *ModelLoader);
-	// Texture.SetShineDamper(10.f);
-	// Texture.SetReflectivity(1.f);
-	TexturedModel TextureModel(Model, ModelTexture(ModelLoader->LoadTexture("./res/white.png")));
+	TexturedModel Tree(OBJLoader::LoadObjModel("./res/tree.obj", *ModelLoader), ModelTexture(ModelLoader->LoadTexture("./res/tree.png")));
+	TexturedModel Grass(OBJLoader::LoadObjModel("./res/grass.obj", *ModelLoader), ModelTexture(ModelLoader->LoadTexture("./res/grass.png")));
+	Grass.GetModelTexture().SetTransparent(true);
+	Grass.GetModelTexture().SetUseFakeLighting(true);
+	TexturedModel Fern(OBJLoader::LoadObjModel("./res/fern.obj", *ModelLoader), ModelTexture(ModelLoader->LoadTexture("./res/fern.png")));
+	Fern.GetModelTexture().SetTransparent(true);
+	Fern.GetModelTexture().SetUseFakeLighting(true);
 
 	Light Sun(Vector3<float>(3000, 2000, 3000), Vector3<float>(1.f));
 
 	Array<Entity> Entities;
 	for (int i = 0; i < 200; i++)
 	{
-		float X = (float)(rand() / 32767.f) * 100.f - 50.f;
-		float Y = (float)(rand() / 32767.f) * 100.f - 50.f;
-		float Z = (float)(rand() / 32767.f) * -300.f;
-		Entities.Add(Entity(TextureModel, Vector3<float>(X, Y, Z), Rotator<float>(rand(), rand(), rand()), Vector3<float>::OneVector()));
+		Entities.Add(Entity(Tree, Vector3<float>((float)(rand() / 32767.f) * 800 - 400, 0, (float)(rand() / 32767.f) * -600), Rotator<float>::ZeroRotator(), Vector3<float>(3.f)));
+		Entities.Add(Entity(Grass, Vector3<float>((float)(rand() / 32767.f) * 800 - 400, 0, (float)(rand() / 32767.f) * -600), Rotator<float>::ZeroRotator(), Vector3<float>::OneVector()));
+		Entities.Add(Entity(Fern, Vector3<float>((float)(rand() / 32767.f) * 800 - 400, 0, (float)(rand() / 32767.f) * -600), Rotator<float>::ZeroRotator(), Vector3<float>(.6f)));
 	}
 
 	Array<Terrain> Terrains;
@@ -129,7 +131,7 @@ int Engine::Loop()
 	{
 		for (int j = -2; j <= 2; j++)
 		{
-			Terrains.Add(Terrain(i, j, *ModelLoader, ModelTexture(ModelLoader->LoadTexture("./res/image.png"))));
+			Terrains.Add(Terrain(i, j, *ModelLoader, ModelTexture(ModelLoader->LoadTexture("./res/terrain.png"))));
 		}
 	}
 

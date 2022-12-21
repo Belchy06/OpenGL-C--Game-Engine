@@ -10,6 +10,7 @@ MasterRenderer::MasterRenderer()
 	, RendererEntity(ShaderEntity, CreateProjectionMatrix())
 	, RendererTerrain(ShaderTerrain, CreateProjectionMatrix())
 {
+	SetCulling(true);
 }
 
 void MasterRenderer::CleanUp()
@@ -46,6 +47,19 @@ void MasterRenderer::ProcessEntity(Entity InEntity)
 void MasterRenderer::ProcessTerrain(Terrain InTerrain)
 {
 	Terrains.Add(InTerrain);
+}
+
+void MasterRenderer::SetCulling(bool bInEnabled)
+{
+	if (bInEnabled)
+	{
+		glEnable(GL_CULL_FACE);
+		glCullFace(GL_BACK);
+	}
+	else
+	{
+		glDisable(GL_CULL_FACE);
+	}
 }
 
 Matrix4<float> MasterRenderer::CreateProjectionMatrix()

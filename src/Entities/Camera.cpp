@@ -2,7 +2,7 @@
 
 Camera::Camera()
 	: Position(Vector3<float>::ZeroVector())
-	, Rotation(Rotator<float>(0.f))
+	, Rotation(Rotator<float>::ZeroRotator())
 {
 }
 

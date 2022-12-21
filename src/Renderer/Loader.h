@@ -27,12 +27,4 @@ private:
 	Array<GLuint> VAOs;
 	Array<GLuint> VBOs;
 	Array<GLuint> Textures;
-
-	struct Texture2D
-	{
-		GLuint TextureID;
-		unsigned char* Pixels;
-		int Width;
-		int Height;
-	};
 };

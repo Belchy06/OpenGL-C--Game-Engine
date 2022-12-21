@@ -37,6 +37,8 @@ public:
 	void ProcessEntity(Entity InEntity);
 	void ProcessTerrain(Terrain InTerrain);
 
+	static void SetCulling(bool bInEnabled);
+
 private:
 	Matrix4<float> CreateProjectionMatrix();
 
