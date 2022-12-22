@@ -46,7 +46,7 @@ void Player::Tick(float DeltaTime)
 		}
 	}
 
-	IncreaseRotation(Vector3<float>(0, CurrentTurnSpeed * DeltaTime, 0));
+	IncreaseRotation(Rotator<float>(0, CurrentTurnSpeed * DeltaTime, 0));
 	float Distance = CurrentHorizontalSpeed * DeltaTime;
 	float DX = Distance * sin(GetRotation().Y);
 	float DZ = Distance * cos(GetRotation().Y);

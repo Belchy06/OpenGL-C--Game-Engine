@@ -22,6 +22,7 @@
 				"${workspaceFolder}\\src\\Terrain\\Terrain.cpp",
 				"${workspaceFolder}\\src\\Models\\RawModel.cpp",
 				"${workspaceFolder}\\src\\Models\\TexturedModel.cpp",
+				"${workspaceFolder}\\src\\Entities\\Object.cpp",
 				"${workspaceFolder}\\src\\Entities\\Entity.cpp",
 				"${workspaceFolder}\\src\\Entities\\Camera.cpp",
 				"${workspaceFolder}\\src\\Entities\\Light.cpp",

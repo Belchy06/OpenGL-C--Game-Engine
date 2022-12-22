@@ -4,10 +4,9 @@ float Terrain::SIZE = 800.f;
 float Terrain::VERTEX_COUNT = 128.f;
 
 Terrain::Terrain(int InGridX, int InGridZ, Loader InModelLoader, TerrainTexture InBlendMap, TerrainTexturePack InTexturePack)
-	: BlendMap(InBlendMap)
+	: Object(Vector3<float>(InGridX * SIZE, 0.f, InGridZ * SIZE))
+	, BlendMap(InBlendMap)
 	, TexturePack(InTexturePack)
-	, X(InGridX * SIZE)
-	, Z(InGridZ * SIZE)
 	, Model(GenerateTerrain(InModelLoader))
 {
 }

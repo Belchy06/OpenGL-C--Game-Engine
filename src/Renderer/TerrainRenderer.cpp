@@ -58,6 +58,6 @@ void TerrainRenderer::UnbindTerrain()
 
 void TerrainRenderer::LoadModelTransformation(Terrain InTerrain)
 {
-	Transform<float> EntityTransformation(Vector3<float>(InTerrain.GetX(), 0.0f, InTerrain.GetZ()), Vector3<float>::OneVector(), Quaternion<float>::Identity());
+	Transform<float> EntityTransformation(InTerrain.GetPosition(), Vector3<float>::OneVector(), InTerrain.GetRotation());
 	Shader.LoadTransformationMatrix(EntityTransformation.ToMatrix());
 }

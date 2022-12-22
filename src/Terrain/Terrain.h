@@ -1,12 +1,13 @@
 #pragma once
 
+#include "../Entities/Object.h"
 #include "../Containers/Array.h"
 #include "../Renderer/Loader.h"
 #include "../Models/RawModel.h"
 #include "../Textures/TerrainTexture.h"
 #include "../Textures/TerrainTexturePack.h"
 
-class Terrain
+class Terrain : public Object
 {
 public:
 	Terrain(int InGridX, int InGridZ, Loader InModelLoader, TerrainTexture InBlendMap, TerrainTexturePack InTexturePack);
@@ -14,14 +15,9 @@ public:
 	RawModel GetModel() { return Model; }
 	TerrainTexturePack GetTexturePack() { return TexturePack; }
 	TerrainTexture GetBlendMap() { return BlendMap; }
-	float GetX() { return X; }
-	float GetZ() { return Z; }
 
 private:
 	RawModel GenerateTerrain(Loader InModelLoader);
-
-	float X;
-	float Z;
 
 	RawModel Model;
 	TerrainTexture BlendMap;

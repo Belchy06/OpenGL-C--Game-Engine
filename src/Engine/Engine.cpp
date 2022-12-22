@@ -14,7 +14,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 	OutputDebugString(WCmdLine.c_str());
 
 	OutputDebugString(L"\n");
-	// clang-format off
+// clang-format off
 	#pragma warning( suppress: 4244 )
 	std::string CmdLine(WCmdLine.begin(), WCmdLine.end());
 	// clang-format on
@@ -202,8 +202,9 @@ int Engine::Loop()
 
 	while (glfwGetKey(Window, GLFW_KEY_ESCAPE) != GLFW_PRESS && glfwWindowShouldClose(Window) == 0)
 	{
+		glfwPollEvents();
 		DeltaTime = std::chrono::system_clock::now() - LastFrameTime;
-		if (DeltaTime.count() < TargetFrameDelta)
+		if (DeltaTime.count() < TargetFrameDelta && TargetFrameDelta != -1.f)
 		{
 			continue;
 		}
@@ -224,7 +225,6 @@ int Engine::Loop()
 		SceneRenderer->Render(Sun, *Cam);
 		// Swap buffers
 		glfwSwapBuffers(Window);
-		glfwPollEvents();
 		LastFrameTime = std::chrono::system_clock::now();
 	}
 
