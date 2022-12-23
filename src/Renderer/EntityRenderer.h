@@ -17,12 +17,12 @@ class EntityRenderer
 {
 public:
 	EntityRenderer(StaticShader InShader, Matrix4<float> InProjectionMatrix);
-	void Render(std::map<TexturedModel, Array<Entity>> InEntities);
+	void Render(std::map<TexturedModel, Array<Entity*>> InEntities);
 
 private:
 	void PrepareTexturedModel(TexturedModel InModel);
 	void UnbindTexturedModel();
-	void PrepareInstance(Entity InEntity);
+	void PrepareInstance(Entity* InEntity);
 
 	StaticShader Shader;
 };

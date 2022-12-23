@@ -39,4 +39,14 @@ public:
 	{
 		return Quaternion<T>(0.f, 0.f, 0.f, 1.f);
 	}
+
+	Quaternion<T> Inverse()
+	{
+		return Quaternion<T>(X * -1.f, Y * -1.f, Z * -1.f, W * 1.f);
+	}
+
+	Quaternion<T> operator*(const Vector3<T> Other) const
+	{
+		return Quaternion<T>(X * Other.X, Y * Other.Y, Z * Other.Z, W);
+	}
 };

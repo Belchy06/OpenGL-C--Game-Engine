@@ -26,7 +26,7 @@ public:
 
 	~Array()
 	{
-		Data.clear();
+		// Data.clear();
 	}
 
 	void Add(T InNewElement)
@@ -76,6 +76,11 @@ public:
 	void Clear()
 	{
 		Data.clear();
+	}
+
+	void Delete(size_t InIdx)
+	{
+		Data.erase(InIdx);
 	}
 
 private:

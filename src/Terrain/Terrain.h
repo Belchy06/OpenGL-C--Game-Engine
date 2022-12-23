@@ -7,7 +7,7 @@
 #include "../Textures/TerrainTexture.h"
 #include "../Textures/TerrainTexturePack.h"
 
-class Terrain : public Object
+class Terrain
 {
 public:
 	Terrain(int InGridX, int InGridZ, Loader InModelLoader, TerrainTexture InBlendMap, TerrainTexturePack InTexturePack);
@@ -15,6 +15,10 @@ public:
 	RawModel GetModel() { return Model; }
 	TerrainTexturePack GetTexturePack() { return TexturePack; }
 	TerrainTexture GetBlendMap() { return BlendMap; }
+
+	Vector3<float> Position;
+	Rotator<float> Rotation;
+	Vector3<float> Scale;
 
 private:
 	RawModel GenerateTerrain(Loader InModelLoader);

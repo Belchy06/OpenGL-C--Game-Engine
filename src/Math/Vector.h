@@ -90,6 +90,20 @@ public:
 	Vector3(Array<T> InData)
 		: X(InData[0]), Y(InData[1]), Z(InData[2]) {}
 
+	Vector3(const Vector3& Other)
+	{
+		X = Other.X;
+		Y = Other.Y;
+		Z = Other.Z;
+	}
+
+	Vector3(Vector3&& Other)
+	{
+		X = Other.X;
+		Y = Other.Y;
+		Z = Other.Z;
+	}
+
 	Vector3(std::initializer_list<T> List)
 	{
 		if (List.size() == 3)
@@ -132,6 +146,18 @@ public:
 	Vector3<T> operator*(const float Scalar) const
 	{
 		return Vector3<T>(X * Scalar, Y * Scalar, Z * Scalar);
+	}
+
+	Vector3<T> operator*(const Vector3<T> Other) const
+	{
+		return Vector3<T>(X * Other.X, Y * Other.Y, Z * Other.Z);
+	}
+
+	void operator=(const Vector3<T>& Other)
+	{
+		this->X = Other.X;
+		this->Y = Other.Y;
+		this->Z = Other.Z;
 	}
 
 	void operator+=(const Vector3<T>& Other)

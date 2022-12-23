@@ -6,6 +6,7 @@
 #include "Quaternion.h"
 #include <utility>
 #include <initializer_list>
+#include <cmath>
 
 template <typename T>
 class Matrix4;
@@ -16,12 +17,12 @@ class Transform
 public:
 	friend class Transform;
 
-	static Transform<T> Identity() { return Transform<T>(Vector3<T>::ZeroVector, Vector3<T>::OneVector, Quaternion<T>::Identity); }
+	static Transform<T> Identity() { return Transform<T>(Vector3<T>::ZeroVector(), Vector3<T>::OneVector(), Quaternion<T>::Identity()); }
 
 	Transform()
-		: Rotation(Quaternion<T>::Identity)
-		, Translation(Vector3<T>::ZeroVector)
-		, Scale(Vector3<T>::OneVector)
+		: Rotation(Quaternion<T>::Identity())
+		, Translation(Vector3<T>::ZeroVector())
+		, Scale(Vector3<T>::OneVector())
 	{
 	}
 
@@ -87,6 +88,26 @@ public:
 		OutMatrix.Data[15] = 1.0f;
 
 		return OutMatrix;
+	}
+
+	Transform<T> Inverse()
+	{
+		Quaternion<float> InvRotation = Rotation.Inverse();
+		Vector3<float> InvScale = Vector3<float>(1.f / Scale.X, 1.f / Scale.Y, 1.f / Scale.Z);
+		Quaternion<float> Temp = InvRotation * (InvScale * (Translation * -1.f));
+		Vector3<float> InvTranslation = Vector3<float>(Temp.X, Temp.Y, Temp.Z);
+
+		return Transform<T>(InvTranslation, InvScale, InvRotation);
+	}
+
+	void Rotate(T InRotAmout, Vector3<T> InRotAxis)
+	{
+		Rotation += Quaternion<float>(Rotator<float>(InRotAxis.X * InRotAmout, InRotAxis.Y * InRotAmout, InRotAxis.Z * InRotAmout));
+	}
+
+	void Translate(Vector3<T> InTranslation)
+	{
+		Translation += InTranslation;
 	}
 
 private:

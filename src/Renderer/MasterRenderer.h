@@ -34,7 +34,7 @@ public:
 	void CleanUp();
 	void Prepare();
 	void Render(Light InSun, Camera InCamera);
-	void ProcessEntity(Entity InEntity);
+	void ProcessEntity(Entity* InEntity);
 	void ProcessTerrain(Terrain InTerrain);
 
 	static void SetCulling(bool bInEnabled);
@@ -48,7 +48,7 @@ private:
 	EntityRenderer RendererEntity;
 	TerrainRenderer RendererTerrain;
 
-	std::map<TexturedModel, Array<Entity>> Entities;
+	std::map<TexturedModel, Array<Entity*>> Entities;
 	Array<Terrain> Terrains;
 
 	static float FOV;

@@ -33,7 +33,7 @@ void StaticShader::LoadViewMatrix(Matrix4<float> InMatrix)
 
 void StaticShader::LoadLight(Light InLight)
 {
-	LoadVector(UniformLocations["lightPosition"], InLight.GetPosition());
+	LoadVector(UniformLocations["lightPosition"], InLight.Position);
 	LoadVector(UniformLocations["lightColour"], InLight.GetColour());
 }
 

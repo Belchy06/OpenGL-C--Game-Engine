@@ -39,10 +39,10 @@ void MasterRenderer::Render(Light InSun, Camera InCamera)
 	Terrains.Clear();
 }
 
-void MasterRenderer::ProcessEntity(Entity InEntity)
+void MasterRenderer::ProcessEntity(Entity* InEntity)
 {
-	TexturedModel EntityModel = InEntity.GetModel();
-	Array<Entity> Batch = Entities[EntityModel];
+	TexturedModel EntityModel = InEntity->GetModel();
+	Array<Entity*> Batch = Entities[EntityModel];
 	Batch.Add(InEntity);
 	Entities[EntityModel] = Batch;
 }

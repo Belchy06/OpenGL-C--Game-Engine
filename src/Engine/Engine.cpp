@@ -24,6 +24,12 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 	return GameEngine.Loop();
 }
 
+MulticastDelegate<Vector2<double>, Vector2<double>> Engine::MouseMove;
+MulticastDelegate<double> Engine::MouseWheel;
+MulticastDelegate<int> Engine::KeyUp;
+MulticastDelegate<int> Engine::KeyDown;
+std::set<Object*> Engine::Objects;
+
 Engine::Engine()
 {
 }
@@ -107,12 +113,11 @@ int Engine::Init(std::string CommandLine)
 	}
 
 	glfwSetKeyCallback(Window, keyCallback);
+	glfwSetCursorPosCallback(Window, cursorPosCallback);
+	glfwSetScrollCallback(Window, cursorScrollCallback);
+
 	ModelLoader = new Loader();
 	SceneRenderer = new MasterRenderer();
-	Cam = new Camera();
-	Cam->SetPosition(Vector3<float>(0, 5, 10));
-
-	User = new Player(TexturedModel(OBJLoader::LoadObjModel("./res/bunny.obj", *ModelLoader), ModelTexture(ModelLoader->LoadTexture("./res/white.png"))), Vector3<float>::ZeroVector(), Rotator<float>::ZeroRotator(), Vector3<float>::OneVector());
 
 	EnginePtr = this;
 	srand(time(NULL));
@@ -174,12 +179,12 @@ int Engine::Loop()
 
 	Light Sun(Vector3<float>(3000, 2000, 3000), Vector3<float>(1.f));
 
-	Array<Entity> Entities;
+	Array<Entity*> Entities;
 	for (int i = 0; i < 200; i++)
 	{
-		Entities.Add(Entity(Tree, Vector3<float>((float)(rand() / 32767.f) * 800 - 400, 0, (float)(rand() / 32767.f) * -600), Rotator<float>::ZeroRotator(), Vector3<float>(3.f)));
-		Entities.Add(Entity(Grass, Vector3<float>((float)(rand() / 32767.f) * 800 - 400, 0, (float)(rand() / 32767.f) * -600), Rotator<float>::ZeroRotator(), Vector3<float>::OneVector()));
-		Entities.Add(Entity(Fern, Vector3<float>((float)(rand() / 32767.f) * 800 - 400, 0, (float)(rand() / 32767.f) * -600), Rotator<float>::ZeroRotator(), Vector3<float>(.6f)));
+		// Entities.Add(new Entity(Tree, Vector3<float>((float)(rand() / 32767.f) * 800 - 400, 0, (float)(rand() / 32767.f) * -600), Rotator<float>::ZeroRotator(), Vector3<float>(3.f)));
+		// Entities.Add(new Entity(Grass, Vector3<float>((float)(rand() / 32767.f) * 800 - 400, 0, (float)(rand() / 32767.f) * -600), Rotator<float>::ZeroRotator(), Vector3<float>::OneVector()));
+		// Entities.Add(new Entity(Fern, Vector3<float>((float)(rand() / 32767.f) * 800 - 400, 0, (float)(rand() / 32767.f) * -600), Rotator<float>::ZeroRotator(), Vector3<float>(.6f)));
 	}
 
 	Array<Terrain> Terrains;
@@ -199,6 +204,7 @@ int Engine::Loop()
 	}
 
 	// TODO: Check timing incase we need to wait to be under MaxFPS
+	Player* User = new Player(TexturedModel(OBJLoader::LoadObjModel("./res/stall.obj", *ModelLoader), ModelTexture(ModelLoader->LoadTexture("./res/stall.png"))), Vector3<float>::ZeroVector(), Rotator<float>::ZeroRotator(), Vector3<float>::OneVector());
 
 	while (glfwGetKey(Window, GLFW_KEY_ESCAPE) != GLFW_PRESS && glfwWindowShouldClose(Window) == 0)
 	{
@@ -211,21 +217,27 @@ int Engine::Loop()
 
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		User->Tick(DeltaTime.count());
-		SceneRenderer->ProcessEntity(*User);
+		// Tick all objects
+		for (Object* InObject : Objects)
+		{
+			InObject->Tick(DeltaTime.count());
+		}
+
+		SceneRenderer->ProcessEntity(User);
 
 		Terrains.ForEach([this](Terrain InTerrain) {
 			SceneRenderer->ProcessTerrain(InTerrain);
 		});
 
-		Entities.ForEach([this](Entity InEntity) {
+		Entities.ForEach([this](Entity* InEntity) {
 			SceneRenderer->ProcessEntity(InEntity);
 		});
 
-		SceneRenderer->Render(Sun, *Cam);
+		SceneRenderer->Render(Sun, User->PlayerCamera);
 		// Swap buffers
 		glfwSwapBuffers(Window);
 		LastFrameTime = std::chrono::system_clock::now();
+		MousePosLastTick = MousePos;
 	}
 
 	SceneRenderer->CleanUp();
@@ -237,12 +249,24 @@ void Engine::HandleKey(GLFWwindow* Window, int Key, int Scancode, int Action, in
 {
 	if (Action == GLFW_PRESS)
 	{
-		User->HandleKeyDown(Key);
+		KeyDown.Broadcast(Key);
 	}
 	else if (Action == GLFW_RELEASE)
 	{
-		User->HandleKeyUp(Key);
+		KeyUp.Broadcast(Key);
 	}
+}
+
+void Engine::HandleMousePos(GLFWwindow* InWindow, double InXPos, double InYPos)
+{
+	MousePos = Vector2<double>(InXPos, InYPos);
+	Vector2<double> Delta(InXPos - MousePosLastTick.X, InYPos - MousePosLastTick.Y);
+	MouseMove.Broadcast(MousePos, Delta);
+}
+
+void Engine::HandleMouseWheel(GLFWwindow* InWindow, double InXOffset, double InYOffset)
+{
+	MouseWheel.Broadcast(InYOffset);
 }
 
 Engine* Engine::GetEngine()
@@ -259,13 +283,25 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
 	}
 }
 
-void APIENTRY glDebugOutput(GLenum source,
-	GLenum type,
-	unsigned int id,
-	GLenum severity,
-	GLsizei length,
-	const char* message,
-	const void* userParam)
+void cursorPosCallback(GLFWwindow* window, double xpos, double ypos)
+{
+	Engine* EnginePtr = Engine::GetEngine();
+	if (EnginePtr != nullptr)
+	{
+		EnginePtr->HandleMousePos(window, xpos, ypos);
+	}
+}
+
+void cursorScrollCallback(GLFWwindow* window, double xoffset, double yoffset)
+{
+	Engine* EnginePtr = Engine::GetEngine();
+	if (EnginePtr != nullptr)
+	{
+		EnginePtr->HandleMouseWheel(window, xoffset, yoffset);
+	}
+}
+
+void APIENTRY glDebugOutput(GLenum source, GLenum type, unsigned int id, GLenum severity, GLsizei length, const char* message, const void* userParam)
 {
 	// ignore non-significant error/warning codes
 	if (id == 131169 || id == 131185 || id == 131218 || id == 131204)

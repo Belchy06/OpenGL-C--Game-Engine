@@ -30,6 +30,11 @@ public:
 	{
 	}
 
+	Rotator<T> operator*(const float Scalar) const
+	{
+		return Rotator<T>(X * Scalar, Y * Scalar, Z * Scalar);
+	}
+
 	Quaternion<T> Quat()
 	{
 		double cr = cos(X * 0.5);

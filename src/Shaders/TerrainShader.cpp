@@ -33,7 +33,7 @@ void TerrainShader::LoadViewMatrix(Matrix4<float> InMatrix)
 
 void TerrainShader::LoadLight(Light InLight)
 {
-	LoadVector(UniformLocations["lightPosition"], InLight.GetPosition());
+	LoadVector(UniformLocations["lightPosition"], InLight.Position);
 	LoadVector(UniformLocations["lightColour"], InLight.GetColour());
 }
 

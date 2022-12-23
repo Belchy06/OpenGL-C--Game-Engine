@@ -9,15 +9,15 @@ EntityRenderer::EntityRenderer(StaticShader InShader, Matrix4<float> InProjectio
 	Shader.Stop();
 }
 
-void EntityRenderer::Render(std::map<TexturedModel, Array<Entity>> InEntities)
+void EntityRenderer::Render(std::map<TexturedModel, Array<Entity*>> InEntities)
 {
-	for (std::map<TexturedModel, Array<Entity>>::iterator Iter = InEntities.begin(); Iter != InEntities.end(); ++Iter)
+	for (std::map<TexturedModel, Array<Entity*>>::iterator Iter = InEntities.begin(); Iter != InEntities.end(); ++Iter)
 	{
 		TexturedModel Model = Iter->first;
 
 		PrepareTexturedModel(Model);
-		Array<Entity> Batch = Iter->second;
-		Batch.ForEach([this, &Model](Entity InEntity) {
+		Array<Entity*> Batch = Iter->second;
+		Batch.ForEach([this, &Model](Entity* InEntity) {
 			PrepareInstance(InEntity);
 			glDrawElements(GL_TRIANGLES, Model.GetRawModel().GetVertexCount(), GL_UNSIGNED_INT, 0);
 		});
@@ -55,8 +55,8 @@ void EntityRenderer::UnbindTexturedModel()
 	glBindVertexArray(0);
 }
 
-void EntityRenderer::PrepareInstance(Entity InEntity)
+void EntityRenderer::PrepareInstance(Entity* InEntity)
 {
-	Transform<float> EntityTransformation(InEntity.GetPosition(), InEntity.GetScale(), InEntity.GetRotation());
+	Transform<float> EntityTransformation(InEntity->Position, InEntity->Scale, InEntity->Rotation);
 	Shader.LoadTransformationMatrix(EntityTransformation.ToMatrix());
 }
