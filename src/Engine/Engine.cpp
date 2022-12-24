@@ -14,7 +14,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 	OutputDebugString(WCmdLine.c_str());
 
 	OutputDebugString(L"\n");
-// clang-format off
+	// clang-format off
 	#pragma warning( suppress: 4244 )
 	std::string CmdLine(WCmdLine.begin(), WCmdLine.end());
 	// clang-format on
@@ -188,20 +188,27 @@ int Engine::Loop()
 	}
 
 	Array<Terrain> Terrains;
-	TerrainTexture BackgroundTexture(ModelLoader->LoadTexture("./res/terrain.png"));
-	TerrainTexture RTexture(ModelLoader->LoadTexture("./res/mud.png"));
-	TerrainTexture GTexture(ModelLoader->LoadTexture("./res/grassFlowers.png"));
-	TerrainTexture BTexture(ModelLoader->LoadTexture("./res/path.png"));
+	TerrainTexture BackgroundTexture(ModelLoader->LoadTexture("./res/white.png"));
+	TerrainTexture RTexture(ModelLoader->LoadTexture("./res/white.png"));
+	TerrainTexture GTexture(ModelLoader->LoadTexture("./res/white.png"));
+	TerrainTexture BTexture(ModelLoader->LoadTexture("./res/white.png"));
 	TerrainTexturePack TexturePack(BackgroundTexture, RTexture, GTexture, BTexture);
-
 	TerrainTexture BlendMap(ModelLoader->LoadTexture("./res/blendMap.png"));
+
 	for (int i = -2; i <= 2; i++)
 	{
 		for (int j = -2; j <= 2; j++)
 		{
-			Terrains.Add(Terrain(i, j, *ModelLoader, BlendMap, TexturePack));
+			// Terrains.Add(Terrain(i, j, *ModelLoader, BlendMap, TexturePack));
 		}
 	}
+
+	Terrains.Add(TerrainFace(0, 0, *ModelLoader, BlendMap, TexturePack, Vector3<float>(0, 0, 1)));
+	Terrains.Add(TerrainFace(0, 0, *ModelLoader, BlendMap, TexturePack, Vector3<float>(0, 0, -1)));
+	Terrains.Add(TerrainFace(0, 0, *ModelLoader, BlendMap, TexturePack, Vector3<float>(0, 1, 0)));
+	Terrains.Add(TerrainFace(0, 0, *ModelLoader, BlendMap, TexturePack, Vector3<float>(0, -1, 0)));
+	Terrains.Add(TerrainFace(0, 0, *ModelLoader, BlendMap, TexturePack, Vector3<float>(1, 0, 0)));
+	Terrains.Add(TerrainFace(0, 0, *ModelLoader, BlendMap, TexturePack, Vector3<float>(-1, 0, 0)));
 
 	// TODO: Check timing incase we need to wait to be under MaxFPS
 	Player* User = new Player(TexturedModel(OBJLoader::LoadObjModel("./res/stall.obj", *ModelLoader), ModelTexture(ModelLoader->LoadTexture("./res/stall.png"))), Vector3<float>::ZeroVector(), Rotator<float>::ZeroRotator(), Vector3<float>::OneVector());

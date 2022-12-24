@@ -165,6 +165,21 @@ public:
 		*this = *this + Other;
 	}
 
+	Vector3<T> Cross(const Vector3<T>& Other)
+	{
+		Vector3<T> Ret;
+		Ret.X = Y * Other.Z - Z * Other.Y;
+		Ret.Y = Z * Other.X - X * Other.Z;
+		Ret.Z = X * Other.Y - Y * Other.X;
+		return Ret;
+	}
+
+	Vector3<T> Normalize()
+	{
+		float Magnitude = sqrt(X * X + Y * Y + Z * Z);
+		return Vector3<T>(X / Magnitude, Y / Magnitude, Z / Magnitude);
+	}
+
 	T X;
 	T Y;
 	T Z;

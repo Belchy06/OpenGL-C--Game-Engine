@@ -38,6 +38,7 @@ public:
 	void ProcessTerrain(Terrain InTerrain);
 
 	static void SetCulling(bool bInEnabled);
+	static void SetWireframe(bool bInEnabled);
 
 private:
 	Matrix4<float> CreateProjectionMatrix();

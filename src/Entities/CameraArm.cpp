@@ -29,13 +29,13 @@ void CameraArm::UpdatePositon(Vector3<float> InPosition, Rotator<float> InRotato
 {
 	float HorizontalDistance = FollowDistance * cos(InRotator.X);
 	float DeltaZ = HorizontalDistance * cos(InRotator.Y);
-	Position.Z = InPosition.Z - DeltaZ;
+	Position.Z = InPosition.Z + DeltaZ;
 
 	float DeltaX = HorizontalDistance * sin(InRotator.Y);
-	Position.X = InPosition.X - DeltaX;
+	Position.X = InPosition.X + DeltaX;
 
 	float VerticalDistance = FollowDistance * sin(InRotator.X);
-	Position.Y = InPosition.Y - VerticalDistance + 10;
+	Position.Y = InPosition.Y - VerticalDistance + 30;
 }
 
 Matrix4<float> CameraArm::GetTransformationMatrix()

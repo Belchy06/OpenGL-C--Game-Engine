@@ -17,6 +17,7 @@
 #include "../Entities/Light.h"
 #include "../Entities/Player.h"
 #include "../Terrain/Terrain.h"
+#include "../Terrain/TerrainFace.h"
 #include "../Models/RawModel.h"
 #include "../Models/TexturedModel.h"
 #include "../Shaders/StaticShader.h"

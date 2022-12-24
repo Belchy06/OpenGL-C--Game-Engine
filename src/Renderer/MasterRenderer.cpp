@@ -65,6 +65,18 @@ void MasterRenderer::SetCulling(bool bInEnabled)
 	}
 }
 
+void MasterRenderer::SetWireframe(bool bInEnabled)
+{
+	if (bInEnabled)
+	{
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	}
+	else
+	{
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	}
+}
+
 Matrix4<float> MasterRenderer::CreateProjectionMatrix()
 {
 	int Width, Height;

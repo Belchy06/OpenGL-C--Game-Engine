@@ -20,12 +20,12 @@ public:
 	Rotator<float> Rotation;
 	Vector3<float> Scale;
 
-private:
-	RawModel GenerateTerrain(Loader InModelLoader);
-
 	RawModel Model;
 	TerrainTexture BlendMap;
 	TerrainTexturePack TexturePack;
+
+private:
+	virtual RawModel GenerateTerrain(Loader InModelLoader);
 
 	static float SIZE;
 	static float VERTEX_COUNT;
